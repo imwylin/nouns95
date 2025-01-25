@@ -65,8 +65,9 @@ interface Proposal {
   againstVotes?: string;
 }
 
-const SignalsPage: NextPage = () => {
+const GovernancePage: NextPage = () => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'votes' | 'proposals'>('votes');
 
   const { loading: loadingSignals, error: signalsError, data: signalsData } = useQuery(GET_PROPOSAL_FEEDBACKS, {
     variables: {
@@ -178,7 +179,22 @@ const SignalsPage: NextPage = () => {
     <div className={styles.pageWrapper}>
       <main className={styles.main}>
         <div className={styles.governanceContainer}>
-          <div className={styles.feedSection}>
+          <div className={styles.mobileTabs}>
+            <button 
+              className={`${styles.mobileTab} ${activeTab === 'votes' ? styles.active : ''}`}
+              onClick={() => setActiveTab('votes')}
+            >
+              Votes & Signals
+            </button>
+            <button 
+              className={`${styles.mobileTab} ${activeTab === 'proposals' ? styles.active : ''}`}
+              onClick={() => setActiveTab('proposals')}
+            >
+              Proposals
+            </button>
+          </div>
+
+          <div className={`${styles.feedSection} ${activeTab === 'votes' ? styles.active : ''}`}>
             <h1 className={styles.title}>Votes & Signals</h1>
             
             {loading && <div className={styles.loading}>Loading data...</div>}
@@ -230,7 +246,7 @@ const SignalsPage: NextPage = () => {
             </div>
           </div>
 
-          <div className={styles.proposalsSection}>
+          <div className={`${styles.proposalsSection} ${activeTab === 'proposals' ? styles.active : ''}`}>
             <h1 className={styles.title}>Proposals</h1>
             <div className={styles.proposalList}>
               {proposalsData?.proposals.map((proposal: Proposal) => (
@@ -273,4 +289,4 @@ const SignalsPage: NextPage = () => {
   );
 };
 
-export default SignalsPage; 
+export default GovernancePage; 
