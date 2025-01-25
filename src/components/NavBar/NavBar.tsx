@@ -42,6 +42,9 @@ const Navbar: React.FC<NavbarProps> = () => {
           <Link href="/governance" className={styles.proposeButton}>
             Governance
           </Link>
+          <Link href="/studio" className={styles.proposeButton}>
+            Studio
+          </Link>
         </div>
         <div className={styles.rightSection}>
           <ConnectButton />
