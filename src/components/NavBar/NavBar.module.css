@@ -71,61 +71,72 @@
 
 .menuButton {
   display: none;
-  background: none;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  margin-left: 8px;
+  background: var(--win95-button-face);
   border: none;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
   cursor: pointer;
-  padding: 0.5rem;
+}
+
+.menuButton:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+  padding: 5px 3px 3px 5px;
 }
 
 .menuIcon {
-  width: 24px;
-  height: 18px;
-  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding: 2px 0;
 }
 
 .menuIcon span {
   display: block;
-  height: 2px;
   width: 100%;
-  background-color: #000;
-  transition: all 0.3s ease;
-}
-
-.menuIcon.open span:first-child {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-
-.menuIcon.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.menuIcon.open span:last-child {
-  transform: rotate(-45deg) translate(5px, -5px);
+  height: 2px;
+  background: var(--win95-black);
 }
 
 .mobileMenu {
   display: none;
   position: fixed;
-  top: 80px;
-  right: 0;
-  background: transparent;
   width: 100%;
-  padding: 1rem;
-  transform: translateY(-150%);
-  opacity: 0;
-  transition: all 0.3s ease;
+  left: 0;
+  top: 72px; /* Height of navbar (40px) + menubar (32px) */
+  background: var(--win95-gray);
+  padding: 4px;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
   z-index: 1000;
 }
 
 .mobileMenu.open {
-  transform: translateY(0);
-  opacity: 1;
+  display: block;
+}
+
+.mobileButtons {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  gap: 8px;
+  padding: 8px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .mobileMenu .discordLink {
@@ -259,8 +270,34 @@
     height: 32px;
   }
 
-  .proposeButton {
-    font-size: 11px;
-    padding: 2px 6px;
+  .menuBar {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 8px;
+  }
+
+  .menuBar .leftSection {
+    display: none;
+  }
+
+  .menuBar .rightSection {
+    gap: 8px;
+  }
+
+  .menuButton {
+    display: block;
+  }
+
+  .mobileButtons > * {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 8px 16px;
+  }
+
+  .mobileButtons .proposeButton,
+  .mobileButtons .exploreLink,
+  .mobileButtons .probeLink {
+    height: 32px;
+    font-size: 14px;
   }
 }

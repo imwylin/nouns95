@@ -1,12 +1,13 @@
 import type { NextPage } from 'next';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Footer from '../components/Footer/Footer';
 import styles from '../styles/Studio.module.css';
 import imageData from '@nouns/assets/dist/image-data.json';
-import { ImageData as NounsImageData, getNounData, getPartData } from '@nouns/assets';
+import { ImageData as NounsImageData } from "@nouns/assets";
 import type { DecodedImage } from '@nouns/sdk/dist/image/types';
 import { ImageData } from "@nouns/assets";
 import nounsImageData from '../utils/nouns-assets-package/image-data.json';
+import Image from 'next/image';
 
 // Get the official Nouns palette and sort into color groups
 const usedColors = new Set<string>();
@@ -262,6 +263,11 @@ const getBackgroundName = (index: number) => {
 // Add export size options at the top level
 const EXPORT_SIZES = [32, 64, 128, 256, 512, 1024];
 
+interface CanvasHistoryState {
+  canvasData: globalThis.ImageData;
+  layer: typeof LAYERS[number]['id'];
+}
+
 const Studio: NextPage = () => {
   const gridCanvasRef = useRef<HTMLCanvasElement>(null);
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -290,6 +296,9 @@ const Studio: NextPage = () => {
   const [extractedColor, setExtractedColor] = useState<string>('white');
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const [history, setHistory] = useState<CanvasHistoryState[]>([]);
+  const [currentHistoryIndex, setCurrentHistoryIndex] = useState(-1);
 
   // Add useEffect for mobile detection
   useEffect(() => {
@@ -396,7 +405,9 @@ const Studio: NextPage = () => {
       const data = await response.json();
       
       // Create an image from the SVG
-      const img = new Image();
+      const img = document.createElement('img') as HTMLImageElement;
+      img.width = CANVAS_SIZE;
+      img.height = CANVAS_SIZE;
       img.onload = () => {
         ctx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
       };
@@ -595,6 +606,62 @@ const Studio: NextPage = () => {
     return `#${data[0].toString(16).padStart(2, '0')}${data[1].toString(16).padStart(2, '0')}${data[2].toString(16).padStart(2, '0')}`.toUpperCase();
   };
 
+  const saveToHistory = useCallback(() => {
+    const activeLayerCanvas = layerCanvasRefs.current[activeLayer];
+    if (!activeLayerCanvas) return;
+
+    const ctx = activeLayerCanvas.getContext('2d');
+    if (!ctx) return;
+
+    const newState: CanvasHistoryState = {
+      canvasData: ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE),
+      layer: activeLayer
+    };
+    
+    const newHistory = history.slice(0, currentHistoryIndex + 1);
+    newHistory.push(newState);
+    
+    setHistory(newHistory);
+    setCurrentHistoryIndex(newHistory.length - 1);
+  }, [activeLayer, history, currentHistoryIndex]);
+
+  const handleUndo = useCallback(() => {
+    if (currentHistoryIndex > 0) {
+      const previousState = history[currentHistoryIndex - 1];
+      const canvas = layerCanvasRefs.current[previousState.layer];
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Clear the canvas first
+      ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      // Put the previous state back
+      ctx.putImageData(previousState.canvasData, 0, 0);
+      setActiveLayer(previousState.layer);
+      setCurrentHistoryIndex(currentHistoryIndex - 1);
+    }
+  }, [currentHistoryIndex, history]);
+
+  const handleRedo = useCallback(() => {
+    if (currentHistoryIndex < history.length - 1) {
+      const nextState = history[currentHistoryIndex + 1];
+      const canvas = layerCanvasRefs.current[nextState.layer];
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Clear the canvas first
+      ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      // Put the next state back
+      ctx.putImageData(nextState.canvasData, 0, 0);
+      setActiveLayer(nextState.layer);
+      setCurrentHistoryIndex(currentHistoryIndex + 1);
+    }
+  }, [currentHistoryIndex, history]);
+
+  // Update floodFill to save history
   const floodFill = (startX: number, startY: number, fillColor: string) => {
     const activeLayerCanvas = layerCanvasRefs.current[activeLayer];
     if (!activeLayerCanvas) return;
@@ -626,29 +693,14 @@ const Studio: NextPage = () => {
       pixelsToCheck.push({x, y: y + 1});
       pixelsToCheck.push({x, y: y - 1});
     }
+    
+    saveToHistory();
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = drawingCanvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const scale = CANVAS_SIZE / rect.width;
-    const x = Math.floor((e.clientX - rect.left) * scale);
-    const y = Math.floor((e.clientY - rect.top) * scale);
-
-    if (tool === 'fill') {
-      floodFill(x, y, selectedColor);
-    } else if (tool === 'eyedropper') {
-      pickColor(x, y);
-    } else {
-      setIsDrawing(true);
-      drawPixel(x, y);
-      lastPos.current = { x, y };
-    }
-  };
-
+  // Update handleMouseUp to save history
   const handleMouseUp = () => {
+    if (!isDrawing) return;
+
     // Transfer the drawing canvas content to the active layer
     const drawingCanvas = drawingCanvasRef.current;
     const activeLayerCanvas = layerCanvasRefs.current[activeLayer];
@@ -660,6 +712,8 @@ const Studio: NextPage = () => {
         activeLayerCtx.drawImage(drawingCanvas, 0, 0);
         // Clear the drawing canvas
         drawingCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        // Save state to history after drawing
+        saveToHistory();
       }
     }
 
@@ -779,6 +833,80 @@ const Studio: NextPage = () => {
     }
   };
 
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = drawingCanvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scale = CANVAS_SIZE / rect.width;
+    const x = Math.floor((e.clientX - rect.left) * scale);
+    const y = Math.floor((e.clientY - rect.top) * scale);
+
+    // Save initial state if this is the first action
+    if (history.length === 0) {
+      const activeLayerCanvas = layerCanvasRefs.current[activeLayer];
+      if (activeLayerCanvas) {
+        const ctx = activeLayerCanvas.getContext('2d');
+        if (ctx) {
+          const initialState: CanvasHistoryState = {
+            canvasData: ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE),
+            layer: activeLayer
+          };
+          setHistory([initialState]);
+          setCurrentHistoryIndex(0);
+        }
+      }
+    }
+
+    if (tool === 'fill') {
+      floodFill(x, y, selectedColor);
+    } else if (tool === 'eyedropper') {
+      pickColor(x, y);
+    } else {
+      setIsDrawing(true);
+      drawPixel(x, y);
+      lastPos.current = { x, y };
+    }
+  }, [tool, selectedColor, history, activeLayer, setHistory, setCurrentHistoryIndex]);
+
+  const handlePixelClick = useCallback((x: number, y: number) => {
+    // Save initial state if this is the first action
+    if (history.length === 0) {
+      const activeLayerCanvas = layerCanvasRefs.current[activeLayer];
+      if (activeLayerCanvas) {
+        const ctx = activeLayerCanvas.getContext('2d');
+        if (ctx) {
+          const initialState: CanvasHistoryState = {
+            canvasData: ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE),
+            layer: activeLayer
+          };
+          setHistory([initialState]);
+          setCurrentHistoryIndex(0);
+        }
+      }
+    }
+
+    if (tool === 'eyedropper') {
+      pickColor(x, y);
+      return;
+    }
+
+    const activeLayerCanvas = layerCanvasRefs.current[activeLayer];
+    if (!activeLayerCanvas) return;
+
+    const ctx = activeLayerCanvas.getContext('2d');
+    if (!ctx) return;
+
+    if (tool === 'eraser') {
+      ctx.clearRect(x, y, 1, 1);
+    } else if (tool === 'pencil') {
+      ctx.fillStyle = selectedColor;
+      ctx.fillRect(x, y, 1, 1);
+    }
+
+    saveToHistory();
+  }, [tool, selectedColor, activeLayer, saveToHistory, history, setHistory, setCurrentHistoryIndex]);
+
   return (
     <div className={styles.pageWrapper}>
       <main className={styles.main}>
@@ -824,6 +952,26 @@ const Studio: NextPage = () => {
               >
                 <div className={styles.win95Icon}>
                   <img src="/eyedropper.png" alt="Color Picker" width="16" height="16" />
+                </div>
+              </button>
+              <button 
+                className={`${styles.tool}`}
+                onClick={handleUndo}
+                disabled={currentHistoryIndex <= 0}
+                title="Undo"
+              >
+                <div className={styles.toolIcon}>
+                  <img src="/undo.png" alt="Undo" className={styles.toolImage} />
+                </div>
+              </button>
+              <button 
+                className={`${styles.tool}`}
+                onClick={handleRedo}
+                disabled={currentHistoryIndex >= history.length - 1}
+                title="Redo"
+              >
+                <div className={styles.toolIcon}>
+                  <img src="/redo.png" alt="Redo" className={styles.toolImage} />
                 </div>
               </button>
             </div>

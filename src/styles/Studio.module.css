@@ -118,6 +118,11 @@
     inset -1px -1px 0 0 var(--win95-button-highlight);
 }
 
+.tool:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .canvasStack {
   position: relative;
   width: 512px;
@@ -876,4 +881,49 @@
     width: 32px;
     height: 32px;
   }
+}
+
+.toolButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  background: var(--win95-button-face);
+  border: none;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+  cursor: pointer;
+}
+
+.toolButton:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+  padding: 1px 0 0 1px;
+}
+
+.toolButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toolIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.toolImage {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
 } 
