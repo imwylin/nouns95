@@ -1,8 +1,9 @@
 .pageWrapper {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px); /* Account for navbar */
   background: var(--win95-gray);
   padding: 1rem;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .main {
@@ -480,8 +481,56 @@
 }
 
 @media (max-width: 768px) {
+  .pageWrapper {
+    padding: 0.5rem;
+  }
+
+  .main {
+    margin-top: 0.5rem;
+  }
+
+  .proposalContainer {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .proposalContent {
+    width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .proposalDescription {
+    padding: 0.5rem;
+  }
+
   .votingStats {
     flex-wrap: wrap;
+  }
+
+  .voteStat {
+    min-width: 60px;
+  }
+
+  /* Ensure tables don't overflow */
+  .proposalDescription table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Make images responsive */
+  .proposalDescription img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Adjust code blocks */
+  .proposalDescription pre {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .activityHeader {
