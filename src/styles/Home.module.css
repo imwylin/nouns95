@@ -57,14 +57,23 @@
 .infoSection {
   width: 100%;
   max-width: 1200px;
+  margin: 2rem auto;
   padding: 1rem;
+}
+
+.infoContent {
   background: var(--win95-gray);
+  padding: 1.5rem;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--win95-black);
   box-shadow: 
     inset -1px -1px 0 0 var(--win95-black),
     inset 1px 1px 0 0 var(--win95-button-highlight),
     inset -2px -2px 0 0 var(--win95-button-shadow),
     inset 2px 2px 0 0 var(--win95-white);
-  margin-bottom: 48px; /* Space for footer */
 }
 
 .infoSection p {
