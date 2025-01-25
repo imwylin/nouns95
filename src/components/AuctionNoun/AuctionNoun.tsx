@@ -555,7 +555,7 @@ const AuctionNoun: React.FC<AuctionNounProps> = ({
                       <div className={classes.bidderDetails}>
                         <ENSName address={NOUNDER_ADDRESS} />
                         <span className={classes.bidTimestamp}>
-                          Automatically sent to Nounder
+                          Automatically sent to Nounders
                         </span>
                       </div>
                     </div>
