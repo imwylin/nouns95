@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelated+MS+Sans+Serif:wght@400&display=swap');
+
+:root {
+  --win95-gray: #c0c0c0;
+  --win95-gray-darker: #808080;
+  --win95-gray-lighter: #dfdfdf;
+  --win95-blue: #000080;
+  --win95-white: #ffffff;
+  --win95-black: #000000;
+  --win95-button-face: #c0c0c0;
+  --win95-button-highlight: #ffffff;
+  --win95-button-shadow: #808080;
+  --win95-window-frame: #000080;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  background: var(--win95-gray);
+  color: var(--win95-black);
+  font-size: 12px;
+  min-height: 100%;
+  height: auto;
+  overflow-y: auto;
+}
+
+/* Windows 95 Button Style */
+.win95-button {
+  position: relative;
+  padding: 6px 8px;
+  border: none;
+  background: var(--win95-button-face);
+  color: var(--win95-black);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+  cursor: pointer;
+}
+
+.win95-button:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+}
+
+/* Windows 95 Panel Style */
+.win95-panel {
+  background: var(--win95-gray);
+  padding: 8px;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+/* Windows 95 Window Style */
+.win95-window {
+  background: var(--win95-gray);
+  border: 2px solid var(--win95-window-frame);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+}
+
+.win95-window-title {
+  background: var(--win95-window-frame);
+  color: var(--win95-white);
+  padding: 2px 4px;
+  font-weight: bold;
+}
+
+a {
+  color: var(--win95-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+}
+
+@media (min-width: 1400px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1140px !important;
+  }
+}
+
+.pageWrapper {
+  min-height: 100vh;
+  height: auto;
+  position: relative;
+  padding-bottom: 48px; /* Space for footer */
+}

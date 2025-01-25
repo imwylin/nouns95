@@ -1,0 +1,181 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  padding: 0 4px;
+  background: var(--win95-blue);
+  color: var(--win95-white);
+}
+
+.menuBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  padding: 4px;
+  background: var(--win95-gray);
+  border-bottom: 1px solid var(--win95-button-shadow);
+}
+
+.logo {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin-left: 4px;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
+  padding-right: 4px;
+}
+
+.discordLink {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  transition: opacity 0.2s ease;
+}
+
+.discordLink:hover {
+  opacity: 0.8;
+}
+
+.menuButton {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.menuIcon {
+  width: 24px;
+  height: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menuIcon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: #000;
+  transition: all 0.3s ease;
+}
+
+.menuIcon.open span:first-child {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menuIcon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menuIcon.open span:last-child {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.mobileMenu {
+  display: none;
+  position: fixed;
+  top: 80px;
+  right: 0;
+  background: transparent;
+  width: 100%;
+  padding: 1rem;
+  transform: translateY(-150%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.mobileMenu.open {
+  transform: translateY(0);
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.mobileMenu .discordLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.mobileMenu .connectButton {
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.proposeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  height: 24px;
+  background: var(--win95-button-face);
+  color: var(--win95-black);
+  text-decoration: none;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.proposeButton:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+  padding: 5px 7px 3px 9px;
+}
+
+.proposeButton:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 40px;
+  }
+
+  .logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .proposeButton {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+}

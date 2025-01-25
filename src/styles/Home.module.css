@@ -1,0 +1,303 @@
+.container {
+  padding: 0 2rem;
+}
+
+.main {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  margin-bottom: 48px; /* Space for footer */
+  min-height: calc(100vh - 48px); /* Account for footer */
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: 3rem;
+  background: var(--win95-gray);
+  padding: 1rem;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.headerSection h1 {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 24px;
+  margin-bottom: 0.5rem;
+  color: var(--win95-black);
+}
+
+.headerSection p {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 14px;
+  color: var(--win95-black);
+  margin-bottom: 0;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--win95-gray);
+  border: 2px solid var(--win95-window-frame);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+  padding: 4px;
+}
+
+.infoSection {
+  width: 100%;
+  max-width: 1200px;
+  padding: 1rem;
+  background: var(--win95-gray);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+  margin-bottom: 48px; /* Space for footer */
+}
+
+.infoSection p {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 14px;
+  color: var(--win95-black);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.infoSection p:last-child {
+  margin-bottom: 0;
+}
+
+.videoContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+}
+
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 4px;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 1rem;
+  }
+
+  .headerSection {
+    margin-bottom: 1rem;
+  }
+
+  .headerSection h1 {
+    font-size: 20px;
+  }
+
+  .headerSection p {
+    font-size: 12px;
+  }
+
+  .infoSection {
+    margin-top: 1rem;
+    padding: 0.75rem;
+  }
+
+  .infoSection p {
+    font-size: 12px;
+  }
+
+  .videoContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+.governanceContainer {
+  width: 100%;
+  max-width: 1200px;
+  padding: 1rem;
+  background: var(--win95-gray);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.title {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 24px;
+  color: var(--win95-black);
+  margin-bottom: 1rem;
+  padding: 4px 8px;
+  background: var(--win95-blue);
+  color: var(--win95-white);
+}
+
+.loading, .error {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  padding: 8px;
+  margin-bottom: 1rem;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.error {
+  color: #ff0000;
+}
+
+.feedbackList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feedbackItem {
+  background: var(--win95-white);
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.feedbackItem:hover {
+  background: var(--win95-gray-lighter);
+}
+
+.feedbackHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.voterInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+}
+
+.proposalId {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  background: var(--win95-button-face);
+  color: var(--win95-black);
+  padding: 2px 6px;
+  font-size: 11px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.proposalId:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+  padding: 3px 5px 1px 7px;
+}
+
+.avatar {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+.feedbackMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+}
+
+.support {
+  padding: 2px 4px;
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.votes {
+  color: var(--win95-gray-darker);
+}
+
+.timestamp {
+  color: var(--win95-gray-darker);
+  font-size: 11px;
+}
+
+.feedbackReason {
+  margin-top: 8px;
+  padding: 8px;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  background: var(--win95-gray);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.proposalLink {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--win95-blue);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .feedbackHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .feedbackMeta {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
