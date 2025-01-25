@@ -164,6 +164,80 @@
   text-decoration: none;
 }
 
+.exploreLink {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 4px 8px;
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.exploreLink:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+  padding: 5px 7px 3px 9px;
+}
+
+.exploreContainer {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.exploreGif {
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  image-rendering: pixelated;
+  margin-right: 8px;
+}
+
+.probeContainer {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.probeImg {
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  image-rendering: pixelated;
+  margin-right: .1rem;
+}
+
+.probeLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.probeLink:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight),
+    inset 2px 2px 0 0 var(--win95-button-shadow),
+    inset -2px -2px 0 0 var(--win95-white);
+  padding: 5px 7px 3px 9px;
+}
+
 @media (max-width: 768px) {
   .navbar {
     height: 40px;

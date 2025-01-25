@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ConnectButton from './ConnectButton/ConnectButton';
 import TreasuryBalance from './TreasuryBalance/TreasuryBalance';
-import styles from './Navbar.module.css';
+import styles from './NavBar.module.css';
 
 interface NavbarProps {
   backgroundColor?: string;
@@ -45,6 +45,41 @@ const Navbar: React.FC<NavbarProps> = () => {
           <Link href="/studio" className={styles.proposeButton}>
             Studio
           </Link>
+          <a 
+            href="https://nouns.world" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className={`${styles.proposeButton} ${styles.exploreLink}`}
+          >
+            <div className={styles.exploreContainer}>
+              <Image
+                src="/nounsworld.gif"
+                alt=""
+                width={16}
+                height={16}
+                unoptimized
+                className={styles.exploreGif}
+              />
+            </div>
+            Explore
+          </a>
+          <a 
+            href="https://www.probe.wtf" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className={`${styles.proposeButton} ${styles.probeLink}`}
+          >
+            <div className={styles.probeContainer}>
+              <Image
+                src="/probe.png"
+                alt=""
+                width={16}
+                height={16}
+                className={styles.probeImg}
+              />
+            </div>
+            Probe
+          </a>
         </div>
         <div className={styles.rightSection}>
           <ConnectButton />
