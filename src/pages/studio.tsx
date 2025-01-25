@@ -285,6 +285,24 @@ const Studio: NextPage = () => {
   // Add export size state
   const [exportSize, setExportSize] = useState<number>(512);
 
+  const [backgroundColor, setBackgroundColor] = useState<string>('white');
+  const [currentNounId, setCurrentNounId] = useState<bigint>(BigInt(0));
+  const [extractedColor, setExtractedColor] = useState<string>('white');
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Add useEffect for mobile detection
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
   // Add export function inside component
   const exportAsPNG = () => {
     // Create a temporary canvas for the export
@@ -764,6 +782,11 @@ const Studio: NextPage = () => {
   return (
     <div className={styles.pageWrapper}>
       <main className={styles.main}>
+        {isMobile && (
+          <div className={styles.mobileWarning}>
+            ⚠️ Best experienced on desktop
+          </div>
+        )}
         <div className={styles.studioContainer}>
           <div className={styles.toolbox}>
             <div className={styles.tools}>
@@ -805,17 +828,50 @@ const Studio: NextPage = () => {
               </button>
             </div>
 
-            <div className={styles.colorPalette}>
-              {NOUNS_PALETTE.map((color) => (
-                <button
-                  key={color}
-                  className={`${styles.colorSwatch} ${color === selectedColor ? styles.active : ''}`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setSelectedColor(color)}
-                  title={color}
-                />
-              ))}
-            </div>
+            {isMobile ? (
+              <div className={styles.colorPaletteContainer}>
+                <button 
+                  className={styles.colorPaletteButton}
+                  onClick={() => setIsPaletteOpen(true)}
+                >
+                  Colors <div className={styles.colorPalettePreview} style={{ backgroundColor: selectedColor }} />
+                </button>
+                {isPaletteOpen && (
+                  <div className={`${styles.colorPalette} ${styles.popup}`}>
+                    <button 
+                      className={styles.closeButton}
+                      onClick={() => setIsPaletteOpen(false)}
+                    >
+                      ×
+                    </button>
+                    {NOUNS_PALETTE.map((color) => (
+                      <button
+                        key={color}
+                        className={`${styles.colorSwatch} ${color === selectedColor ? styles.active : ''}`}
+                        style={{ backgroundColor: color }}
+                        onClick={() => {
+                          setSelectedColor(color);
+                          setIsPaletteOpen(false);
+                        }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={styles.colorPalette}>
+                {NOUNS_PALETTE.map((color) => (
+                  <button
+                    key={color}
+                    className={`${styles.colorSwatch} ${color === selectedColor ? styles.active : ''}`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => setSelectedColor(color)}
+                    title={color}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           
           <div className={styles.canvasWrapper}>
