@@ -10,6 +10,7 @@ import { ApolloProvider } from '@apollo/client';
 import apolloClient from '../apollo-client';
 import Footer from '../components/Footer/Footer';
 import Navbar from '../components/NavBar/NavBar';
+import { Analytics } from '@vercel/analytics/react';
 
 const client = new QueryClient();
 
@@ -51,6 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiConfig>
+      <Analytics />
     </>
   );
 }
