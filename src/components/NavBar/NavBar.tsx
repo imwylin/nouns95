@@ -17,12 +17,11 @@ const Navbar: React.FC<NavbarProps> = () => {
           <div className={styles.logo}>
             <Link href="/">
               <Image
-                src="/logo.svg"
-                alt="Nouns Logo"
-                fill
-                style={{
-                  objectFit: 'contain',
-                }}
+                src="/nouns95.png"
+                alt="Nouns 95"
+                width={20}
+                height={20}
+                className={styles.logoImage}
               />
             </Link>
           </div>
