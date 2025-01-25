@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useQuery } from '@apollo/client';
 import { ENSName } from 'react-ens-name';
 import styles from '../styles/governance.module.css';
-import Navbar from '../components/NavBar/NavBar';
 import { GET_PROPOSAL_FEEDBACKS, GET_VOTES, GET_PROPOSALS_FEED } from '../graphql/queries';
 
 interface ProposalFeedback {
@@ -177,7 +176,6 @@ const SignalsPage: NextPage = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <Navbar backgroundColor="transparent" />
       <main className={styles.main}>
         <div className={styles.governanceContainer}>
           <div className={styles.feedSection}>

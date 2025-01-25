@@ -2,26 +2,33 @@
 
 :root {
   --win95-gray: #c0c0c0;
-  --win95-gray-darker: #808080;
   --win95-gray-lighter: #dfdfdf;
+  --win95-gray-darker: #808080;
+  --win95-gray-darkest: #404040;
   --win95-blue: #000080;
-  --win95-white: #ffffff;
   --win95-black: #000000;
+  --win95-white: #ffffff;
   --win95-button-face: #c0c0c0;
   --win95-button-highlight: #ffffff;
   --win95-button-shadow: #808080;
   --win95-window-frame: #000080;
 }
 
-html,
-body {
+* {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
   background: var(--win95-gray);
+  min-height: 100vh;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
   color: var(--win95-black);
   font-size: 12px;
-  min-height: 100%;
   height: auto;
   overflow-y: auto;
 }
@@ -77,16 +84,12 @@ body {
 }
 
 a {
-  color: var(--win95-blue);
+  color: inherit;
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 #root {
@@ -107,4 +110,21 @@ a:hover {
   height: auto;
   position: relative;
   padding-bottom: 48px; /* Space for footer */
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container > *:nth-child(2) {
+  flex: 1;
+}
+
+@font-face {
+  font-family: 'Pixelated MS Sans Serif';
+  src: url('https://cdn.jsdelivr.net/npm/ms-sans-serif@1.0.0/MS%20Sans%20Serif.ttf');
+  font-weight: normal;
+  font-style: normal;
 }

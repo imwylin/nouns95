@@ -17,7 +17,8 @@
   gap: 1rem;
   width: 100%;
   margin: 0 auto;
-  align-items: stretch;
+  align-items: start;
+  min-height: calc(100vh - 4rem);
 }
 
 .proposalContent {
@@ -28,7 +29,8 @@
     inset -2px -2px 0 0 var(--win95-button-shadow),
     inset 2px 2px 0 0 var(--win95-white);
   padding: 1rem;
-  position: relative;
+  height: fit-content;
+  margin-bottom: 2rem;
 }
 
 .proposalHeader {
@@ -291,10 +293,10 @@
   padding: 1rem;
   position: sticky;
   top: 1rem;
-  height: 100%;
+  max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  overflow: hidden;
 }
 
 .activitySection h2 {
@@ -315,16 +317,16 @@
   flex-direction: column;
   gap: 0.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   flex-grow: 1;
   padding-right: 0.5rem;
-  min-height: 0;
-  scrollbar-width: auto;
-  scrollbar-color: var(--win95-button-face) var(--win95-gray);
+  margin-right: -0.5rem;
 }
 
 /* Windows 95 scrollbar styles */
 .activityList::-webkit-scrollbar {
   width: 16px;
+  background: var(--win95-gray);
 }
 
 .activityList::-webkit-scrollbar-track {
@@ -344,21 +346,46 @@
 
 .activityList::-webkit-scrollbar-button:single-button {
   display: block;
-  height: 16px;
   width: 16px;
+  height: 16px;
   background: var(--win95-button-face);
+  border: 1px solid var(--win95-black);
   box-shadow: 
     inset -1px -1px 0 0 var(--win95-button-shadow),
     inset 1px 1px 0 0 var(--win95-button-highlight);
-  border: 1px solid var(--win95-black);
+  position: relative;
 }
 
-.activityList::-webkit-scrollbar-button:single-button:vertical:decrement {
-  border-bottom: 0;
+.activityList::-webkit-scrollbar-button:single-button:decrement:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid var(--win95-black);
+  transform: translate(-50%, -50%);
 }
 
-.activityList::-webkit-scrollbar-button:single-button:vertical:increment {
-  border-top: 0;
+.activityList::-webkit-scrollbar-button:single-button:increment:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid var(--win95-black);
+  transform: translate(-50%, -50%);
+}
+
+.activityList::-webkit-scrollbar-button:single-button:active {
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
 }
 
 .activityItem {
@@ -465,4 +492,134 @@
     width: 100%;
     align-items: flex-start;
   }
+}
+
+.voteWindow {
+  margin-bottom: 1rem;
+}
+
+.voteWindow h2 {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 14px;
+  color: var(--win95-white);
+  margin-bottom: 1rem;
+  padding: 4px 8px;
+  background: var(--win95-blue);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+}
+
+.voteButtons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.voteButton {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  background: var(--win95-button-face);
+  border: 2px solid;
+  border-top-color: var(--win95-white);
+  border-left-color: var(--win95-white);
+  border-right-color: var(--win95-black);
+  border-bottom-color: var(--win95-black);
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+  min-width: 80px;
+}
+
+.voteMessage {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  color: var(--win95-gray-darkest);
+  padding: 0.5rem;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.reasonInput {
+  margin: 0.5rem 0;
+}
+
+.reasonInput label {
+  display: block;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.reasonInput textarea {
+  width: 100%;
+  min-height: 40px;
+  max-height: 80px;
+  padding: 0.5rem;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  background: var(--win95-white);
+  border: none;
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  resize: vertical;
+}
+
+.submitButton {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  background: var(--win95-button-face);
+  border: 2px solid;
+  border-top-color: var(--win95-white);
+  border-left-color: var(--win95-white);
+  border-right-color: var(--win95-black);
+  border-bottom-color: var(--win95-black);
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.submitButton:not(:disabled):active {
+  border-top-color: var(--win95-black);
+  border-left-color: var(--win95-black);
+  border-right-color: var(--win95-white);
+  border-bottom-color: var(--win95-white);
+  transform: translateY(1px);
+}
+
+.submitButton.disabled,
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  background: var(--win95-gray);
+}
+
+.voteButton:active,
+.voteButton.selected {
+  border-top-color: var(--win95-black);
+  border-left-color: var(--win95-black);
+  border-right-color: var(--win95-white);
+  border-bottom-color: var(--win95-white);
+  transform: translateY(1px);
+}
+
+.voteButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.voteStatus {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  color: var(--win95-blue);
+}
+
+.voteError {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  color: var(--win95-red);
+  margin-top: 0.5rem;
 } 

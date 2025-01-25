@@ -3,11 +3,13 @@ import '@rainbow-me/rainbowkit/styles.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider } from 'wagmi';
+import { WagmiProvider, WagmiConfig } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from '../wagmi';
 import { ApolloProvider } from '@apollo/client';
 import apolloClient from '../apollo-client';
+import Footer from '../components/Footer/Footer';
+import Navbar from '../components/NavBar/NavBar';
 
 const client = new QueryClient();
 
@@ -36,15 +38,19 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="twitter:image" content="https://yourdapp.com/og-image.png" />
       </Head>
 
-      <WagmiProvider config={config}>
+      <WagmiConfig config={config}>
         <QueryClientProvider client={client}>
           <RainbowKitProvider modalSize="compact" showRecentTransactions={true}>
             <ApolloProvider client={apolloClient}>
-              <Component {...pageProps} />
+              <div className="app-container">
+                <Navbar backgroundColor="transparent" />
+                <Component {...pageProps} />
+                <Footer />
+              </div>
             </ApolloProvider>
           </RainbowKitProvider>
         </QueryClientProvider>
-      </WagmiProvider>
+      </WagmiConfig>
     </>
   );
 }
