@@ -22,18 +22,18 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         
         <title>Nouns</title>
-        <meta name="title" content="Nouns95" />
+        <meta name="title" content="Nouns 95" />
         <meta name="description" content="One Noun. Every Day. Forever." />
         
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://yourdapp.com" />
-        <meta property="og:title" content="Nouns95" />
+        <meta property="og:title" content="Nouns 95" />
         <meta property="og:description" content="One Noun. Every Day. Forever." />
         <meta property="og:image" content="https://yourdapp.com/og-image.png" />
         
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://yourdapp.com" />
-        <meta property="twitter:title" content="Nouns95" />
+        <meta property="twitter:title" content="Nouns 95" />
         <meta property="twitter:description" content="One Noun. Every Day. Forever." />
         <meta property="twitter:image" content="https://yourdapp.com/og-image.png" />
       </Head>

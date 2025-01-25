@@ -7,7 +7,7 @@ import remarkImages from 'remark-images';
 import styles from '../../styles/proposal.module.css';
 import { GET_PROPOSAL_BY_ID } from '../../graphql/queries';
 import Link from 'next/link';
-import { useWriteContract, useAccount } from 'wagmi';
+import { useWriteContract, useAccount, useBlockNumber } from 'wagmi';
 import { useState } from 'react';
 import { mainnet } from 'viem/chains';
 
@@ -178,6 +178,7 @@ const VoteWindow = ({ proposalId }: { proposalId: string }) => {
 const ProposalPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { data: blockNumber } = useBlockNumber({ watch: true });
 
   const { loading, error, data } = useQuery(GET_PROPOSAL_BY_ID, {
     variables: { id },
@@ -200,12 +201,28 @@ const ProposalPage: NextPage = () => {
       return proposal.status;
     }
 
-    // For ACTIVE proposals, check if they've ended
-    const currentTimestamp = Math.floor(Date.now() / 1000);
-    const endTime = parseInt(proposal.endBlock) * 13; // Approximate block time in seconds
-    
-    if (currentTimestamp > endTime) {
-      // Voting has ended, check the results
+    // Use actual block number from chain if available
+    const currentBlock = blockNumber || Math.floor(Date.now() / 1000 / 12);
+    const startBlock = parseInt(proposal.startBlock);
+    const endBlock = parseInt(proposal.endBlock);
+
+    console.log('Proposal', proposal.id, {
+      currentBlock,
+      startBlock,
+      endBlock,
+      forVotes: proposal.forVotes,
+      againstVotes: proposal.againstVotes,
+      quorumVotes: proposal.quorumVotes,
+      isActive: currentBlock >= startBlock && currentBlock <= endBlock
+    });
+
+    // If we haven't reached the start block or we're before the end block, it's active
+    if (currentBlock >= startBlock && currentBlock <= endBlock) {
+      return 'ACTIVE';
+    }
+
+    // Only check defeat conditions after voting has ended
+    if (currentBlock > endBlock) {
       const forVotes = parseInt(proposal.forVotes || '0');
       const againstVotes = parseInt(proposal.againstVotes || '0');
       const quorumVotes = parseInt(proposal.quorumVotes || '0');
