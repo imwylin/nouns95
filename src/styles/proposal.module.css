@@ -57,14 +57,15 @@
 .backButton {
   color: var(--win95-blue);
   text-decoration: none;
-  margin: 2rem 0;
-  padding: 16px 16px;
+  margin: 2rem 1rem;
+  padding: 4px 8px;
   font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
   font-size: 12px;
   background: none;
   border: none;
   cursor: pointer;
   display: block;
+  text-align: left;
 }
 
 .backButton:hover {

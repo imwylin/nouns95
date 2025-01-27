@@ -134,11 +134,11 @@
   bottom: 32px;
   left: 0;
   z-index: 9998;
-  animation: slideUp 0.15s ease-out;
 }
 
 .startMenu {
   display: flex;
+  flex-direction: column;
   background: var(--win95-gray);
   border: 2px solid;
   border-top-color: var(--win95-button-highlight);
@@ -147,6 +147,11 @@
   border-right-color: var(--win95-button-shadow);
   padding: 2px;
   min-width: 180px;
+  display: none;
+}
+
+.startMenu.open {
+  display: flex;
 }
 
 .startMenuLeft {

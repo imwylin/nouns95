@@ -27,7 +27,7 @@ const Auction = dynamic(() => import('../../pages/auction'), { ssr: false });
 const GovernanceContent = dynamic(() => import('../../pages/governance').then(mod => ({ default: mod.GovernanceContent })), { ssr: false });
 
 const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWindow }) => {
-  const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -65,7 +65,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest(`.${styles.startButton}`) && !target.closest(`.${styles.startMenuContainer}`)) {
-        setIsStartMenuOpen(false);
+        setIsOpen(false);
         setActiveMenuItem(null);
       }
     };
@@ -111,12 +111,12 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
     { label: 'Probe', icon: '/probe.png', href: 'https://probe.wtf', external: true },
     { label: 'Help', icon: '/help.png', onClick: () => {
       setShowHelp(true);
-      setIsStartMenuOpen(false);
+      setIsOpen(false);
     }},
     { type: 'divider' as const },
     { label: 'Shut Down...', icon: '/shutdown.png', onClick: () => {
       setShowError(true);
-      setIsStartMenuOpen(false);
+      setIsOpen(false);
     }},
   ];
 
@@ -130,7 +130,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
     if (item.hasSubmenu) {
       setActiveMenuItem(activeMenuItem === item.label ? null : item.label);
     } else {
-      setIsStartMenuOpen(false);
+      setIsOpen(false);
       setActiveMenuItem(null);
       if (item.onClick) {
         item.onClick();
@@ -157,7 +157,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
           className={styles.submenuItem}
           onClick={(e) => {
             e.stopPropagation();
-            setIsStartMenuOpen(false);
+            setIsOpen(false);
             setActiveMenuItem(null);
             if (subItem.external) {
               window.open(subItem.href, '_blank');
@@ -210,8 +210,16 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
         />
       )}
 
-      {isStartMenuOpen && (
-        <div className={styles.startMenuContainer}>
+      <div className={styles.taskbar}>
+        <button 
+          className={`${styles.startButton} ${isOpen ? styles.startButtonActive : ''}`}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <Image src="/programs.png" alt="" width={16} height={16} />
+          <span>Start</span>
+        </button>
+
+        <div className={`${styles.startMenuContainer} ${isOpen ? styles.open : ''}`}>
           <div className={styles.startMenu}>
             <div className={styles.startMenuLeft}>
               <div className={styles.sidebarContainer}>
@@ -249,21 +257,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
             </div>
           </div>
         </div>
-      )}
 
-      <div className={styles.taskbar}>
-        <button 
-          className={`${styles.startButton} ${isStartMenuOpen ? styles.startButtonActive : ''}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsStartMenuOpen(!isStartMenuOpen);
-            setActiveMenuItem(null);
-          }}
-        >
-          <Image src="/nouns95.png" alt="Start" width={16} height={16} />
-          <span>Start</span>
-        </button>
-        
         <div className={styles.runningApps}>
           {activeWindows.map(window => {
             const isActiveWindow = window.id === getActiveWindowId();
