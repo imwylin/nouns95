@@ -8,8 +8,7 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from '../wagmi';
 import { ApolloProvider } from '@apollo/client';
 import apolloClient from '../apollo-client';
-import Footer from '../components/Footer/Footer';
-import Navbar from '../components/NavBar/NavBar';
+import Windows95 from '../components/Windows95/Windows95';
 import { Analytics } from '@vercel/analytics/react';
 
 const client = new QueryClient();
@@ -22,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" type="image/png" href="/nouns95.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         
-        <title>Nouns</title>
+        <title>Nouns 95</title>
         <meta name="title" content="Nouns 95" />
         <meta name="description" content="One Noun. Every Day. Forever." />
         
@@ -43,11 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={client}>
           <RainbowKitProvider modalSize="compact" showRecentTransactions={true}>
             <ApolloProvider client={apolloClient}>
-              <div className="app-container">
-                <Navbar backgroundColor="transparent" />
-                <Component {...pageProps} />
-                <Footer />
-              </div>
+              <Component {...pageProps} />
             </ApolloProvider>
           </RainbowKitProvider>
         </QueryClientProvider>

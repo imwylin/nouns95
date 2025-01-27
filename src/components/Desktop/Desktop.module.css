@@ -1,0 +1,50 @@
+.desktop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 32px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.shortcut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  width: 70px;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.shortcut span {
+  color: var(--win95-white);
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
+  font-size: 11px;
+  text-align: center;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.shortcut:focus {
+  outline: 1px dotted var(--win95-white);
+  outline-offset: -1px;
+  background: var(--win95-blue);
+}
+
+.shortcut:active span {
+  transform: translateY(1px);
+}
+
+.shortcutIcon {
+  object-fit: contain;
+  max-width: 100%;
+  height: auto;
+} 

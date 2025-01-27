@@ -1,35 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@400;700&display=swap');
-
 .auctionNounWrapper {
   width: 100%;
-  padding: 1rem;
-  transition: background-color 0.3s ease;
+  height: 100%;
+  padding: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .nounContent {
-  max-width: 1200px;
-  margin: 0 auto;
+  flex: 1;
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 0.5rem;
   background: var(--win95-gray);
-  padding: 1rem;
+  padding: 0.5rem;
   box-shadow: 
     inset -1px -1px 0 0 var(--win95-black),
     inset 1px 1px 0 0 var(--win95-button-highlight),
     inset -2px -2px 0 0 var(--win95-button-shadow),
     inset 2px 2px 0 0 var(--win95-white);
+  overflow: hidden;
+  min-height: 0;
 }
 
 .nounImageSection {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .noun {
   width: 100%;
-  max-width: 500px;
+  max-width: 30rem;
   aspect-ratio: 1;
   background: var(--win95-white);
   padding: 4px;
@@ -61,14 +67,16 @@
 }
 
 .auctionInfoSection {
-  padding: 1rem;
+  padding: 0.5rem;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .navigationWrapper {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .currentAuctionButton {

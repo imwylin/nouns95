@@ -907,14 +907,13 @@ const Studio: NextPage = () => {
     saveToHistory();
   }, [tool, selectedColor, activeLayer, saveToHistory, history, setHistory, setCurrentHistoryIndex]);
 
+  const setLayerCanvasRef = (index: number) => (el: HTMLCanvasElement | null) => {
+    layerCanvasRefs.current[index] = el;
+  };
+
   return (
     <div className={styles.pageWrapper}>
-      <main className={styles.main}>
-        {isMobile && (
-          <div className={styles.mobileWarning}>
-            ⚠️ Best experienced on desktop
-          </div>
-        )}
+      <div className={styles.main}>
         <div className={styles.studioContainer}>
           <div className={styles.toolbox}>
             <div className={styles.tools}>
@@ -1021,139 +1020,162 @@ const Studio: NextPage = () => {
               </div>
             )}
           </div>
-          
-          <div className={styles.canvasWrapper}>
-            <div className={styles.canvasStack}>
-              <canvas
-                ref={gridCanvasRef}
-                className={styles.gridCanvas}
-              />
-              <canvas
-                ref={drawingCanvasRef}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseLeave}
-                className={styles.drawingCanvas}
-              />
-            </div>
-          </div>
 
-          <div className={styles.layersPanel}>
-            <div className={styles.helpSection}>
-              <div className={styles.helpTitle}>How to Use</div>
-              <ul className={styles.helpList}>
-                <li><span className={styles.helpIcon}>↑</span> Click a layer to select it - your edits will appear on the selected layer</li>
-                <li><span className={styles.helpIcon}>□</span> Select traits from the dropdowns or draw your own</li>
-                <li>
-                  <span className={styles.helpIcon}>
-                    <img src="/pencil.png" alt="Pencil" width="16" height="16" className={styles.helpIconImg} />
-                  </span>
-                  Use pencil to draw pixel by pixel
-                </li>
-                <li>
-                  <span className={styles.helpIcon}>
-                    <img src="/bucket.png" alt="Fill" width="16" height="16" className={styles.helpIconImg} />
-                  </span>
-                  Use fill tool to fill areas
-                </li>
-                <li>
-                  <span className={styles.helpIcon}>
-                    <img src="/eraser.png" alt="Eraser" width="16" height="16" className={styles.helpIconImg} />
-                  </span>
-                  Use eraser to remove pixels
-                </li>
-                <li>
-                  <span className={styles.helpIcon}>
-                    <img src="/eyedropper.png" alt="Color Picker" width="16" height="16" className={styles.helpIconImg} />
-                  </span>
-                  Use color picker to select colors from the canvas
-                </li>
-                <li><span className={styles.helpIcon}>◉</span> Toggle layers on/off - only visible layers will be exported</li>
-              </ul>
-            </div>
-            <div className={styles.exportSection}>
-              <div className={styles.exportTitle}>Export</div>
-              <div className={styles.exportControls}>
-                <select 
-                  className={styles.sizeSelect}
-                  value={exportSize}
-                  onChange={(e) => setExportSize(Number(e.target.value))}
-                >
-                  {EXPORT_SIZES.map(size => (
-                    <option key={size} value={size}>
-                      {size}x{size}
-                    </option>
+          <div className={styles.mainSection}>
+            <div className={styles.canvasWrapper}>
+              <div className={styles.canvasArea}>
+                <div className={styles.canvasStack}>
+                  <canvas
+                    ref={gridCanvasRef}
+                    className={styles.gridCanvas}
+                    width={32}
+                    height={32}
+                  />
+                  {LAYERS.map((layer, index) => (
+                    <canvas
+                      key={layer.id}
+                      ref={setLayerCanvasRef(index)}
+                      className={styles.layerCanvas}
+                      width={32}
+                      height={32}
+                    />
                   ))}
-                </select>
-                <button 
-                  className={styles.exportButton}
-                  onClick={exportAsPNG}
-                >
-                  <span className={styles.win95Icon}>↓</span> Export PNG
-                </button>
-              </div>
-            </div>
-            {LAYERS.map((layer) => (
-              <div 
-                key={layer.id}
-                className={`${styles.layer} ${activeLayer === layer.id ? styles.active : ''}`}
-                onClick={() => setActiveLayer(layer.id)}
-              >
-                <div className={styles.layerPreview}>
-                  <img 
-                    src={`/${layer.id}.svg`} 
-                    alt={layer.name} 
-                    className={styles.layerIcon}
+                  <canvas
+                    ref={drawingCanvasRef}
+                    className={styles.drawingCanvas}
+                    width={32}
+                    height={32}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseLeave}
                   />
                 </div>
-                <span className={styles.layerName}>{layer.name}</span>
-                <div className={styles.layerControls}>
-                  <button
-                    className={styles.layerControl}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleLayerVisibility(layer.id);
-                    }}
-                  >
-                    {visibleLayers.has(layer.id) ? 
-                      <span className={styles.win95Icon}>◉</span> : 
-                      <span className={styles.win95Icon}>○</span>
-                    }
-                  </button>
-                  <select 
-                    className={styles.traitSelect}
-                    value={selectedTraits[layer.id] || ''}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      handleTraitSelect(layer.id as LayerId, e.target.value);
-                    }}
-                  >
-                    <option value="">Select {layer.name}</option>
-                    {layer.id === 'background' ? (
-                      typedImageData.bgcolors.map((color, index) => (
-                        <option key={index} value={color}>
-                          {getBackgroundName(index)}
+              </div>
+            </div>
+
+            <div className={styles.controlsWrapper}>
+              <div className={styles.leftControls}>
+                <div className={styles.exportSection}>
+                  <div className={styles.exportTitle}>Export</div>
+                  <div className={styles.exportControls}>
+                    <select 
+                      className={styles.sizeSelect}
+                      value={exportSize}
+                      onChange={(e) => setExportSize(Number(e.target.value))}
+                    >
+                      {EXPORT_SIZES.map(size => (
+                        <option key={size} value={size}>
+                          {size}x{size}
                         </option>
-                      ))
-                    ) : (
-                      [...typedImageData.images[TRAIT_CATEGORIES[layer.id as LayerId] as ImageCategory]]
-                        .sort((a, b) => formatTraitName(a.filename, layer.id as LayerId)
-                          .localeCompare(formatTraitName(b.filename, layer.id as LayerId)))
-                        .map((trait, index) => (
-                          <option key={index} value={trait.filename}>
-                            {formatTraitName(trait.filename, layer.id as LayerId)}
-                          </option>
-                        ))
-                    )}
-                  </select>
-                  <button className={styles.layerControl}>⋮</button>
+                      ))}
+                    </select>
+                    <button 
+                      className={styles.exportButton}
+                      onClick={exportAsPNG}
+                    >
+                      <span className={styles.win95Icon}>↓</span> Export PNG
+                    </button>
+                  </div>
+                </div>
+
+                <div className={styles.helpSection}>
+                  <div className={styles.helpTitle}>Instructions</div>
+                  <ul className={styles.helpList}>
+                    <li><span className={styles.helpIcon}>↑</span> Click a layer to select it - your edits will appear on the selected layer</li>
+                    <li><span className={styles.helpIcon}>□</span> Select traits from the dropdowns or draw your own</li>
+                    <li>
+                      <span className={styles.helpIcon}>
+                        <img src="/pencil.png" alt="Pencil" width="16" height="16" className={styles.helpIconImg} />
+                      </span>
+                      Use pencil to draw pixel by pixel
+                    </li>
+                    <li>
+                      <span className={styles.helpIcon}>
+                        <img src="/bucket.png" alt="Fill" width="16" height="16" className={styles.helpIconImg} />
+                      </span>
+                      Use fill tool to fill areas
+                    </li>
+                    <li>
+                      <span className={styles.helpIcon}>
+                        <img src="/eraser.png" alt="Eraser" width="16" height="16" className={styles.helpIconImg} />
+                      </span>
+                      Use eraser to remove pixels
+                    </li>
+                    <li>
+                      <span className={styles.helpIcon}>
+                        <img src="/eyedropper.png" alt="Color Picker" width="16" height="16" className={styles.helpIconImg} />
+                      </span>
+                      Use color picker to select colors from the canvas
+                    </li>
+                    <li><span className={styles.helpIcon}>◉</span> Toggle layers on/off - only visible layers will be exported</li>
+                  </ul>
                 </div>
               </div>
-            ))}
+
+              <div className={styles.layersPanel}>
+                {LAYERS.map((layer) => (
+                  <div 
+                    key={layer.id}
+                    className={`${styles.layer} ${activeLayer === layer.id ? styles.active : ''}`}
+                    onClick={() => setActiveLayer(layer.id)}
+                  >
+                    <div className={styles.layerPreview}>
+                      <img 
+                        src={`/${layer.id}.svg`} 
+                        alt={layer.name} 
+                        className={styles.layerIcon}
+                      />
+                    </div>
+                    <span className={styles.layerName}>{layer.name}</span>
+                    <div className={styles.layerControls}>
+                      <button
+                        className={styles.layerControl}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLayerVisibility(layer.id);
+                        }}
+                      >
+                        {visibleLayers.has(layer.id) ? 
+                          <span className={styles.win95Icon}>◉</span> : 
+                          <span className={styles.win95Icon}>○</span>
+                        }
+                      </button>
+                      <select 
+                        className={styles.traitSelect}
+                        value={selectedTraits[layer.id] || ''}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleTraitSelect(layer.id as LayerId, e.target.value);
+                        }}
+                      >
+                        <option value="">Select {layer.name}</option>
+                        {layer.id === 'background' ? (
+                          typedImageData.bgcolors.map((color, index) => (
+                            <option key={index} value={color}>
+                              {getBackgroundName(index)}
+                            </option>
+                          ))
+                        ) : (
+                          [...typedImageData.images[TRAIT_CATEGORIES[layer.id as LayerId] as ImageCategory]]
+                            .sort((a, b) => formatTraitName(a.filename, layer.id as LayerId)
+                              .localeCompare(formatTraitName(b.filename, layer.id as LayerId)))
+                            .map((trait, index) => (
+                              <option key={index} value={trait.filename}>
+                                {formatTraitName(trait.filename, layer.id as LayerId)}
+                              </option>
+                            ))
+                        )}
+                      </select>
+                      <button className={styles.layerControl}>⋮</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </main>
+      </div>
       <Footer />
     </div>
   );

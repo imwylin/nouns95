@@ -1,37 +1,50 @@
 .pageWrapper {
   width: 100%;
-  min-height: calc(100vh - 60px); /* Account for navbar */
-  background: var(--win95-gray);
-  padding: 1rem;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  min-height: calc(100vh - 4rem);
+}
+
+.pageWrapper.inWindow {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 8px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .main {
   width: 100%;
-  max-width: 1200px;
-  margin: 1rem auto 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.inWindow .main {
+  overflow: hidden;
 }
 
 .proposalContainer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 1rem;
-  width: 100%;
-  margin: 0 auto;
-  align-items: start;
-  min-height: calc(100vh - 4rem);
+  height: 100%;
+}
+
+.inWindow .proposalContainer {
+  overflow: hidden;
 }
 
 .proposalContent {
-  background: var(--win95-gray);
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-black),
-    inset 1px 1px 0 0 var(--win95-button-highlight),
-    inset -2px -2px 0 0 var(--win95-button-shadow),
-    inset 2px 2px 0 0 var(--win95-white);
-  padding: 1rem;
-  height: fit-content;
-  margin-bottom: 2rem;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.activitySection {
+  overflow-y: auto;
+  padding-right: 8px;
 }
 
 .proposalHeader {
@@ -44,9 +57,18 @@
 .backButton {
   color: var(--win95-blue);
   text-decoration: none;
-  margin-bottom: 0.5rem;
+  margin: 2rem 0;
+  padding: 16px 16px;
   font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
   font-size: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: block;
+}
+
+.backButton:hover {
+  text-decoration: underline;
 }
 
 .proposalId {
@@ -59,6 +81,31 @@
     inset -1px -1px 0 0 var(--win95-black),
     inset 1px 1px 0 0 var(--win95-button-highlight);
   display: inline-block;
+}
+
+.quorumInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--win95-gray-darkest);
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  padding: 4px 8px;
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+  margin-bottom: 0.5rem;
+}
+
+.quorumLabel {
+  font-weight: bold;
+}
+
+.quorumValue {
+  color: var(--win95-gray-darkest);
 }
 
 .votingStats {
@@ -117,10 +164,36 @@
 
 .proposalMeta {
   display: flex;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
   color: var(--win95-gray-darkest);
   font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
   font-size: 11px;
+  padding: 4px 8px;
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.proposerInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.avatar {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  border: 1px solid var(--win95-button-shadow);
+}
+
+.timestamp {
+  color: var(--win95-gray-darkest);
+  margin-left: auto;
 }
 
 .proposalStatus {
@@ -276,8 +349,9 @@
   font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
   font-size: 14px;
   color: var(--win95-white);
-  margin-bottom: 1rem;
+  margin: 0;
   padding: 4px 8px;
+  min-width: max-content;
   background: var(--win95-blue);
   box-shadow: 
     inset -1px -1px 0 0 var(--win95-black),
@@ -406,27 +480,11 @@
   gap: 0.5rem;
 }
 
-.voterInfo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
-  font-size: 11px;
-}
-
-.avatar {
-  width: 16px;
-  height: 16px;
-  image-rendering: pixelated;
-}
-
 .activityMeta {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.25rem;
-  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
-  font-size: 11px;
+  gap: 4px;
 }
 
 .support {
@@ -438,10 +496,14 @@
     inset 1px 1px 0 0 var(--win95-button-highlight),
     inset -2px -2px 0 0 var(--win95-button-shadow),
     inset 2px 2px 0 0 var(--win95-white);
+  min-width: 120px;
+  text-align: center;
 }
 
 .votes, .timestamp {
   color: var(--win95-gray-darkest);
+  font-size: 11px;
+  text-align: right;
 }
 
 .activityReason {
@@ -558,6 +620,16 @@
   .activityMeta {
     width: 100%;
     align-items: flex-start;
+  }
+
+  .transactionsHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .sectionTitle {
+    padding: 4px 8px;
   }
 }
 
@@ -689,4 +761,422 @@
   font-size: 12px;
   color: var(--win95-red);
   margin-top: 0.5rem;
+}
+
+.transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--win95-gray);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.transaction {
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+  padding: 1rem;
+}
+
+.transactionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: var(--win95-gray);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.target {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  color: var(--win95-black);
+  font-weight: bold;
+  word-break: break-all;
+}
+
+.value {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  color: var(--win95-black);
+  padding: 2px 6px;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  margin-left: 1rem;
+  min-width: 80px;
+  text-align: right;
+}
+
+.signature {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--win95-gray-darkest);
+  padding: 0.5rem;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  margin-bottom: 0.5rem;
+  word-break: break-all;
+}
+
+.calldata {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--win95-gray-darkest);
+  padding: 0.5rem;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  word-break: break-all;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+/* Add Windows 95 scrollbar styles for calldata */
+.calldata::-webkit-scrollbar {
+  width: 16px;
+  background: var(--win95-gray);
+}
+
+.calldata::-webkit-scrollbar-track {
+  background: var(--win95-gray);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.calldata::-webkit-scrollbar-thumb {
+  background: var(--win95-button-face);
+  border: 1px solid var(--win95-black);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-button-shadow),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+}
+
+/* Mobile styles for transactions */
+@media (max-width: 768px) {
+  .transactions {
+    padding: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  .transaction {
+    padding: 0.75rem;
+  }
+
+  .transactionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .value {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+
+  .signature,
+  .calldata {
+    font-size: 10px;
+    padding: 0.25rem;
+  }
+}
+
+.voterInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+}
+
+.proposalDescription img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  padding: 8px;
+  background: var(--win95-white);
+  box-sizing: border-box;
+}
+
+.description {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  color: var(--win95-black);
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.transactionsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.simulationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.simulateButton {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  background: var(--win95-button-face);
+  border: 2px solid;
+  border-top-color: var(--win95-white);
+  border-left-color: var(--win95-white);
+  border-right-color: var(--win95-black);
+  border-bottom-color: var(--win95-black);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  min-width: 150px;
+}
+
+.simulateButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  background: var(--win95-gray);
+}
+
+.simulateButton:not(:disabled):active {
+  border-top-color: var(--win95-black);
+  border-left-color: var(--win95-black);
+  border-right-color: var(--win95-white);
+  border-bottom-color: var(--win95-white);
+  transform: translateY(1px);
+}
+
+.simulationResults {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.simulationResult {
+  padding: 0.75rem;
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.simulationResult.success {
+  border-left: 4px solid #4CAF50;
+}
+
+.simulationResult.error {
+  border-left: 4px solid #f44336;
+}
+
+.simulationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.simulationStatus {
+  font-weight: bold;
+}
+
+.simulationError {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  color: #f44336;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.errorMessage {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.errorReason,
+.decodedError,
+.errorAddress {
+  margin-top: 0.25rem;
+  padding: 0.25rem;
+  background: var(--win95-gray-lighter);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.stateChanges {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.stateChangesTitle {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--win95-gray-darkest);
+  margin-bottom: 0.25rem;
+}
+
+.stateChange {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--win95-gray-darkest);
+  padding: 0.25rem;
+  margin-top: 0.25rem;
+  background: var(--win95-gray-lighter);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  word-break: break-all;
+}
+
+.simulationGas {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  color: var(--win95-gray-darkest);
+  margin-top: 0.25rem;
+}
+
+/* Mobile styles for simulation */
+@media (max-width: 768px) {
+  .transactionsHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .sectionTitle {
+    padding: 4px 8px;
+  }
+
+  .simulateButton {
+    width: 100%;
+  }
+}
+
+.errorFunction,
+.rawError,
+.subErrors,
+.eventLogs,
+.balanceChanges,
+.networkInfo {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.subErrorsTitle,
+.eventLogsTitle,
+.balanceChangesTitle,
+.networkInfoTitle {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--win95-gray-darkest);
+  margin-bottom: 0.5rem;
+}
+
+.subError,
+.eventLog,
+.balanceChange {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--win95-gray-lighter);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.subErrorContract,
+.eventLogContract,
+.balanceChangeContract,
+.stateChangeContract {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  color: var(--win95-blue);
+  margin-bottom: 0.25rem;
+}
+
+.subErrorFunction,
+.subErrorMessage,
+.subErrorReason,
+.eventLogName,
+.eventLogData,
+.stateChangeLabel,
+.stateChangeValue,
+.stateChangeType {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--win95-gray-darkest);
+  margin-top: 0.25rem;
+  word-break: break-all;
+}
+
+.balanceChangeValues {
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  color: var(--win95-gray-darkest);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.networkInfo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  color: var(--win95-gray-darkest);
+}
+
+.rawError {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  white-space: pre-wrap;
+  word-break: break-all;
 } 

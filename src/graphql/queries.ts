@@ -219,41 +219,72 @@ export const GET_PROPOSALS = gql`
 `;
 
 export const GET_PROPOSAL_CANDIDATES = gql`
-  query GetProposalCandidates($first: Int!, $skip: Int!) {
+  query GetProposalCandidates(
+    $skip: Int
+    $first: Int
+    $orderBy: ProposalCandidate_orderBy
+    $orderDirection: OrderDirection
+  ) {
     proposalCandidates(
-      first: $first,
-      skip: $skip,
-      orderBy: createdAt,
-      orderDirection: desc
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+      orderDirection: $orderDirection
     ) {
       id
       proposer {
         id
       }
+      createdTimestamp
       latestVersion {
+        id
         content {
-          title
-          description
+          id
+          proposer
           targets
           values
           signatures
           calldatas
+          description
+          proposalIdToUpdate
+          title
+          encodedProposalHash
+          matchingProposalIds
+          contentSignatures {
+            id
+            signer {
+              id
+            }
+            sig
+          }
         }
       }
-      signers {
+    }
+  }
+`;
+
+export const GET_PROPOSAL_CANDIDATE_SIGNATURES = gql`
+  query GetProposalCandidateSignatures(
+    $skip: Int
+    $first: Int
+    $orderBy: ProposalCandidateSignature_orderBy
+    $orderDirection: OrderDirection
+    $where: ProposalCandidateSignature_filter
+  ) {
+    proposalCandidateSignatures(
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      where: $where
+    ) {
+      id
+      signer {
         id
-        signer {
-          id
-        }
-        signature
       }
-      feedback {
+      signature
+      candidate {
         id
-        supporter {
-          id
-        }
-        support
-        reason
       }
     }
   }
@@ -406,19 +437,49 @@ export const GET_PROPOSAL_BY_ID = gql`
       proposer {
         id
       }
-      status
+      signers {
+        id
+      }
+      targets
+      values
+      signatures
+      calldatas
       createdTimestamp
+      createdBlock
+      lastUpdatedTimestamp
+      lastUpdatedBlock
+      createdTransactionHash
+      lastUpdatedTransactionHash
       startBlock
       endBlock
+      proposalThreshold
+      quorumVotes
       forVotes
       againstVotes
       abstainVotes
-      quorumVotes
-      proposalThreshold
+      status
+      executionETA
       totalSupply
       adjustedTotalSupply
-      executionETA
+      minQuorumVotesBPS
+      maxQuorumVotesBPS
+      quorumCoefficient
+      objectionPeriodEndBlock
+      updatePeriodEndBlock
+      onTimelockV1
       voteSnapshotBlock
+      canceledBlock
+      canceledTimestamp
+      canceledTransactionHash
+      executedBlock
+      executedTimestamp
+      executedTransactionHash
+      vetoedBlock
+      vetoedTimestamp
+      vetoedTransactionHash
+      queuedBlock
+      queuedTimestamp
+      queuedTransactionHash
       clientId
       votes(orderBy: blockTimestamp, orderDirection: desc) {
         id
@@ -439,6 +500,41 @@ export const GET_PROPOSAL_BY_ID = gql`
         votes
         reason
         createdTimestamp
+      }
+    }
+  }
+`;
+
+export const GET_PROPOSAL_CANDIDATE = gql`
+  query GetProposalCandidate($id: ID!) {
+    proposalCandidate(id: $id) {
+      id
+      proposer {
+        id
+      }
+      createdTimestamp
+      latestVersion {
+        id
+        content {
+          id
+          proposer
+          targets
+          values
+          signatures
+          calldatas
+          description
+          proposalIdToUpdate
+          title
+          encodedProposalHash
+          matchingProposalIds
+          contentSignatures {
+            id
+            signer {
+              id
+            }
+            sig
+          }
+        }
       }
     }
   }

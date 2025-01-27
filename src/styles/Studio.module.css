@@ -1,10 +1,11 @@
 .pageWrapper {
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: var(--win95-gray);
   color: var(--win95-black);
   font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  overflow: hidden;
 }
 
 .main {
@@ -13,15 +14,17 @@
   flex-direction: column;
   padding: 0;
   overflow: hidden;
+  min-height: 0;
 }
 
 .studioContainer {
-  display: flex;
-  gap: 0;
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  gap: 1rem;
   background: var(--win95-gray);
   padding: 1rem;
-  height: calc(100vh - 64px); /* Account for navbar */
-  width: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -31,43 +34,8 @@
   gap: 0.5rem;
   padding: 0.75rem;
   background: var(--win95-gray);
-  width: 280px;
-  flex-shrink: 0;
-  height: 100%;
-  justify-content: space-between;
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-black),
-    inset 1px 1px 0 0 var(--win95-button-highlight),
-    inset -2px -2px 0 0 var(--win95-button-shadow),
-    inset 2px 2px 0 0 var(--win95-white);
-}
-
-.canvasWrapper {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  min-width: 0;
-  height: 100%;
-  background: var(--win95-gray);
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-black),
-    inset 1px 1px 0 0 var(--win95-button-highlight),
-    inset -2px -2px 0 0 var(--win95-button-shadow),
-    inset 2px 2px 0 0 var(--win95-white);
-}
-
-.layersPanel {
-  display: flex;
-  flex-direction: column;
-  background: var(--win95-gray);
-  width: 320px;
-  flex-shrink: 0;
-  padding: 0.5rem;
-  height: 100%;
-  overflow-y: auto;
-  justify-content: flex-end;
+  min-height: 0; /* Allow flex shrinking */
+  overflow: hidden;
   box-shadow: 
     inset -1px -1px 0 0 var(--win95-black),
     inset 1px 1px 0 0 var(--win95-button-highlight),
@@ -76,24 +44,90 @@
 }
 
 .tools {
+  flex: 0 0 auto;
   display: flex;
-  gap: 0.25rem;
-  flex-wrap: wrap;
-  flex-shrink: 0;
+  gap: 4px;
+  margin-bottom: 0.5rem;
 }
 
-.tool {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: var(--win95-button-face);
-  cursor: pointer;
+.colorPalette {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1px;
+  padding: 4px;
+  overflow-y: auto; /* Change from scroll to auto */
+  min-height: 0; /* Allow flex shrinking */
+  background: var(--win95-gray);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  padding-right: 20px;
+}
+
+.mainSection {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  overflow: hidden;
+  flex: 1;
+}
+
+.canvasWrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.controlsWrapper {
+  flex: 0 0 20rem;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.canvasArea {
+  position: relative;
+  display: flex;
   justify-content: center;
-  font-size: 1.2rem;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  align-items: center;
+  background: var(--win95-gray);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+  padding: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.canvasStack {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1;
+  background: var(--win95-white);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+}
+
+.leftControls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.exportSection {
+  flex: 0 0 auto;
+  background: var(--win95-gray);
+  padding: 0.5rem;
   box-shadow: 
     inset -1px -1px 0 0 var(--win95-black),
     inset 1px 1px 0 0 var(--win95-button-highlight),
@@ -101,70 +135,135 @@
     inset 2px 2px 0 0 var(--win95-white);
 }
 
-.tool:active {
+.helpSection {
+  flex: 1;
+  min-height: 0; /* Allow flex shrinking */
+  overflow-y: auto; /* Change from scroll to auto */
+  background: var(--win95-gray);
+  padding: 0.5rem;
+  padding-right: 20px;
   box-shadow: 
-    inset 1px 1px 0 0 var(--win95-black),
-    inset -1px -1px 0 0 var(--win95-button-highlight),
-    inset 2px 2px 0 0 var(--win95-button-shadow),
-    inset -2px -2px 0 0 var(--win95-white);
-  padding: 1px 0 0 1px;
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
 }
 
-.tool.active {
-  background: var(--win95-blue);
-  color: var(--win95-white);
+/* Common scrollbar styles for Windows 95 look */
+.colorPalette::-webkit-scrollbar,
+.helpSection::-webkit-scrollbar,
+.layersPanel::-webkit-scrollbar {
+  width: 16px;
+  background: var(--win95-gray);
+}
+
+.colorPalette::-webkit-scrollbar-track,
+.helpSection::-webkit-scrollbar-track,
+.layersPanel::-webkit-scrollbar-track {
+  background: var(--win95-gray);
   box-shadow: 
     inset 1px 1px 0 0 var(--win95-black),
     inset -1px -1px 0 0 var(--win95-button-highlight);
 }
 
-.tool:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.colorPalette::-webkit-scrollbar-thumb,
+.helpSection::-webkit-scrollbar-thumb,
+.layersPanel::-webkit-scrollbar-thumb {
+  background: var(--win95-button-face);
+  border: 1px solid var(--win95-black);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-button-shadow),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
 }
 
-.canvasStack {
+.colorPalette::-webkit-scrollbar-button:single-button,
+.helpSection::-webkit-scrollbar-button:single-button,
+.layersPanel::-webkit-scrollbar-button:single-button {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: var(--win95-button-face);
+  border: 1px solid var(--win95-black);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-button-shadow),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
   position: relative;
-  width: 512px;
-  height: 512px;
-  flex-shrink: 0;
-  background: var(--win95-white);
+}
+
+.colorPalette::-webkit-scrollbar-button:single-button:active,
+.helpSection::-webkit-scrollbar-button:single-button:active,
+.layersPanel::-webkit-scrollbar-button:single-button:active {
   box-shadow: 
     inset 1px 1px 0 0 var(--win95-black),
     inset -1px -1px 0 0 var(--win95-button-highlight);
 }
 
-.gridCanvas {
+.colorPalette::-webkit-scrollbar-button:single-button:vertical:decrement:after,
+.helpSection::-webkit-scrollbar-button:single-button:vertical:decrement:after,
+.layersPanel::-webkit-scrollbar-button:single-button:vertical:decrement:after {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 512px;
-  height: 512px;
-  image-rendering: pixelated;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid var(--win95-black);
+  transform: translate(-50%, -50%);
 }
 
-.drawingCanvas {
+.colorPalette::-webkit-scrollbar-button:single-button:vertical:increment:after,
+.helpSection::-webkit-scrollbar-button:single-button:vertical:increment:after,
+.layersPanel::-webkit-scrollbar-button:single-button:vertical:increment:after {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  cursor: crosshair;
-  width: 512px;
-  height: 512px;
-  image-rendering: pixelated;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid var(--win95-black);
+  transform: translate(-50%, -50%);
 }
 
-/* Add styles for layer canvases */
+.layersPanel {
+  min-height: 0; /* Allow flex shrinking */
+  overflow-y: auto; /* Change from scroll to auto */
+  background: var(--win95-gray);
+  padding: 0.5rem;
+  padding-right: 20px;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
+}
+
+.gridCanvas,
+.drawingCanvas,
 .layerCanvas {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.drawingCanvas {
+  z-index: 10;
+  cursor: crosshair;
+}
+
+.gridCanvas {
+  z-index: 1;
+}
+
+.layerCanvas {
   z-index: 5;
   pointer-events: none;
-  width: 512px;
-  height: 512px;
-  image-rendering: pixelated;
 }
 
 .colorPaletteContainer {
@@ -205,100 +304,9 @@
   border: 1px solid var(--win95-black);
 }
 
-.colorPalette {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 1px;
-  padding: 4px;
-  background: var(--win95-gray);
-  flex: 1;
-  max-width: none;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  min-height: 0;
-  margin-top: auto;
-  box-shadow: 
-    inset 1px 1px 0 0 var(--win95-black),
-    inset -1px -1px 0 0 var(--win95-button-highlight);
-  padding-right: 20px; /* Account for scrollbar width */
-}
-
-/* Force scrollbar to always show on macOS */
-.colorPalette::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 16px;
-  background: var(--win95-gray);
-}
-
-/* Hide default macOS scrollbar */
-.colorPalette {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-
-.colorPalette::-webkit-scrollbar-track {
-  background: var(--win95-gray);
-  box-shadow: 
-    inset 1px 1px 0 0 var(--win95-black),
-    inset -1px -1px 0 0 var(--win95-button-highlight);
-}
-
-.colorPalette::-webkit-scrollbar-thumb {
-  -webkit-appearance: none;
-  background: var(--win95-button-face);
-  border: 1px solid var(--win95-black);
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-button-shadow),
-    inset 1px 1px 0 0 var(--win95-button-highlight);
-}
-
-.colorPalette::-webkit-scrollbar-button:single-button {
-  display: block;
-  width: 16px;
-  height: 16px;
-  background: var(--win95-button-face);
-  border: 1px solid var(--win95-black);
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-button-shadow),
-    inset 1px 1px 0 0 var(--win95-button-highlight);
-  position: relative;
-}
-
-.colorPalette::-webkit-scrollbar-button:single-button:active {
-  box-shadow: 
-    inset 1px 1px 0 0 var(--win95-black),
-    inset -1px -1px 0 0 var(--win95-button-highlight);
-}
-
-.colorPalette::-webkit-scrollbar-button:single-button:decrement:after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid var(--win95-black);
-  transform: translate(-50%, -50%);
-}
-
-.colorPalette::-webkit-scrollbar-button:single-button:increment:after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid var(--win95-black);
-  transform: translate(-50%, -50%);
-}
-
 .colorSwatch {
-  width: 24px;
-  height: 24px;
+  aspect-ratio: 1;
+  width: 100%;
   border: 1px solid var(--win95-black);
   cursor: pointer;
   padding: 0;
@@ -459,17 +467,6 @@
   padding: 8px;
 }
 
-.exportSection {
-  background: var(--win95-gray);
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-black),
-    inset 1px 1px 0 0 var(--win95-button-highlight),
-    inset -2px -2px 0 0 var(--win95-button-shadow),
-    inset 2px 2px 0 0 var(--win95-white);
-}
-
 .exportTitle {
   font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
   font-size: 12px;
@@ -540,20 +537,6 @@
     inset 2px 2px 0 0 var(--win95-button-shadow),
     inset -2px -2px 0 0 var(--win95-white);
   padding: 5px 7px 3px 9px;
-}
-
-.helpSection {
-  margin-bottom: 1rem;
-  color: var(--win95-black);
-  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
-  font-size: 12px;
-  line-height: 1.4;
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-black),
-    inset 1px 1px 0 0 var(--win95-button-highlight),
-    inset -2px -2px 0 0 var(--win95-button-shadow),
-    inset 2px 2px 0 0 var(--win95-white);
-  padding: 1rem;
 }
 
 .helpTitle {
@@ -653,6 +636,54 @@
   display: none;
 }
 
+@media (max-width: 1400px) {
+  .studioContainer {
+    gap: 0.75rem;
+    min-width: 700px;
+  }
+
+  .controlsWrapper {
+    gap: 0.75rem;
+  }
+
+  .canvasStack {
+    width: 384px;
+    height: 384px;
+  }
+
+  .toolbox {
+    width: 240px;
+  }
+
+  .layersPanel {
+    width: 280px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .studioContainer {
+    gap: 0.5rem;
+    min-width: 600px;
+  }
+
+  .controlsWrapper {
+    gap: 0.5rem;
+  }
+
+  .canvasStack {
+    width: 320px;
+    height: 320px;
+  }
+
+  .toolbox {
+    width: 220px;
+  }
+
+  .layersPanel {
+    width: 260px;
+  }
+}
+
 @media (max-width: 768px) {
   .mobileWarning {
     display: block;
@@ -672,21 +703,23 @@
   }
 
   .studioContainer {
+    display: flex;
     flex-direction: column;
-    padding: 0.5rem;
-    gap: 0.5rem;
-    height: auto;
-    min-height: calc(100vh - 64px);
-    overflow-y: auto;
   }
 
   .toolbox {
     width: 100%;
     height: auto;
-    padding: 0.5rem;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
+  }
+
+  .canvasWrapper {
+    padding: 1rem;
+    height: auto;
+  }
+
+  .layersPanel {
+    width: 100%;
+    height: auto;
   }
 
   .tools {
@@ -745,12 +778,6 @@
     padding: 1px 0 0 1px;
   }
 
-  .canvasWrapper {
-    padding: 0.5rem;
-    height: auto;
-    aspect-ratio: 1;
-  }
-
   .canvasStack {
     width: 100%;
     height: auto;
@@ -762,14 +789,6 @@
   .layerCanvas {
     width: 100%;
     height: 100%;
-  }
-
-  .layersPanel {
-    width: 100%;
-    height: auto;
-    padding: 0.5rem;
-    margin-bottom: 2rem;
-    overflow-y: visible;
   }
 
   .layer {
@@ -828,43 +847,27 @@
   .exportButton {
     width: 100%;
   }
+
+  .controlsWrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .exportSection,
+  .helpSection,
+  .layersPanel {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 @media (min-width: 769px) {
   .layersPanel {
-    display: flex;
-    flex-direction: column;
-    background: var(--win95-gray);
-    width: 320px;
-    flex-shrink: 0;
-    padding: 0.5rem;
-    height: 100%;
-    overflow-y: auto;
-    justify-content: flex-end;
+    max-height: none; /* Remove max-height constraint */
+    flex: 1;
   }
 
   .canvasWrapper {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-    min-width: 0;
-    height: 100%;
-  }
-
-  .colorPalette {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 1px;
-    padding: 4px;
-    background: var(--win95-gray);
-    flex: 1;
-    max-width: none;
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 0;
-    margin-top: auto;
+    max-height: none; /* Remove max-height constraint */
   }
 }
 
@@ -883,33 +886,39 @@
   }
 }
 
-.toolButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tool {
   width: 32px;
   height: 32px;
-  margin: 4px;
   background: var(--win95-button-face);
   border: none;
+  padding: 0;
+  cursor: pointer;
   box-shadow: 
     inset -1px -1px 0 0 var(--win95-black),
     inset 1px 1px 0 0 var(--win95-button-highlight),
     inset -2px -2px 0 0 var(--win95-button-shadow),
     inset 2px 2px 0 0 var(--win95-white);
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.toolButton:active {
+.tool:active:not(.active) {
   box-shadow: 
     inset 1px 1px 0 0 var(--win95-black),
-    inset -1px -1px 0 0 var(--win95-button-highlight),
-    inset 2px 2px 0 0 var(--win95-button-shadow),
-    inset -2px -2px 0 0 var(--win95-white);
+    inset -1px -1px 0 0 var(--win95-button-highlight);
   padding: 1px 0 0 1px;
 }
 
-.toolButton:disabled {
+.tool.active {
+  background: var(--win95-button-face);
+  box-shadow: 
+    inset 1px 1px 0 0 var(--win95-black),
+    inset -1px -1px 0 0 var(--win95-button-highlight);
+  padding: 1px 0 0 1px;
+}
+
+.tool:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -926,4 +935,21 @@
   width: 16px;
   height: 16px;
   image-rendering: pixelated;
+  display: block;
+}
+
+.layersPanel {
+  display: flex;
+  flex-direction: column;
+  background: var(--win95-gray);
+  width: 320px;
+  flex-shrink: 0;
+  padding: 0.5rem;
+  height: 100%;
+  overflow-y: auto;
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight),
+    inset -2px -2px 0 0 var(--win95-button-shadow),
+    inset 2px 2px 0 0 var(--win95-white);
 } 

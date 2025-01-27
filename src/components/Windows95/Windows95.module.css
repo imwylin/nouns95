@@ -1,0 +1,168 @@
+.windows95 {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: teal;
+  user-select: none;
+}
+
+.desktop {
+  width: 100%;
+  height: calc(100% - 32px);
+  position: relative;
+  overflow: hidden;
+}
+
+.window {
+  position: absolute;
+  background: var(--win95-gray);
+  border: 2px solid;
+  border-top-color: var(--win95-button-highlight);
+  border-left-color: var(--win95-button-highlight);
+  border-bottom-color: var(--win95-button-shadow);
+  border-right-color: var(--win95-button-shadow);
+  min-width: 200px !important;
+  min-height: 150px !important;
+  box-shadow: 1px 1px 0 0 #000;
+  overflow: hidden;
+  pointer-events: all;
+}
+
+/* Add specific minimum dimensions for auction window */
+.window[data-window-id="/auction"] {
+  min-width: 600px !important;
+  min-height: 650px !important;
+}
+
+/* Keep existing studio window minimum dimensions */
+.window[data-window-id="/studio"] {
+  min-width: 1024px !important;
+  min-height: 768px !important;
+}
+
+.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 32px !important;
+  width: 100% !important;
+  height: calc(100vh - 32px) !important;
+  resize: none;
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+  background: var(--win95-blue);
+  color: var(--win95-white);
+  padding: 2px 3px;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  user-select: none;
+}
+
+.titleBarIcon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 2px;
+  object-fit: contain;
+  max-width: 16px !important;
+  max-height: 16px !important;
+}
+
+/* Specific override for studio icon */
+.titleBarIcon[src*="studio"] {
+  transform: scale(0.5);
+  transform-origin: center;
+}
+
+.titleBarText {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.titleBarButtons {
+  display: flex;
+  gap: 2px;
+}
+
+.titleBarButtons button {
+  width: 16px;
+  height: 14px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--win95-gray);
+  border: 1px solid var(--win95-button-highlight);
+  border-top-color: var(--win95-button-highlight);
+  border-left-color: var(--win95-button-highlight);
+  border-bottom-color: var(--win95-button-shadow);
+  border-right-color: var(--win95-button-shadow);
+  box-shadow: inset -1px -1px 0 0 var(--win95-gray-darker);
+  color: var(--win95-black);
+  cursor: pointer;
+}
+
+.titleBarButtons button:active {
+  border: 1px solid var(--win95-button-shadow);
+  border-top-color: var(--win95-button-shadow);
+  border-left-color: var(--win95-button-shadow);
+  border-bottom-color: var(--win95-button-highlight);
+  border-right-color: var(--win95-button-highlight);
+  box-shadow: inset 1px 1px 0 0 var(--win95-button-shadow);
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.windowContent {
+  padding: 4px;
+  height: calc(100% - 24px);
+  overflow: hidden;
+  background: var(--win95-gray);
+  pointer-events: all;
+}
+
+.resizeHandle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nw-resize;
+  background: var(--win95-gray);
+  border: 1px solid var(--win95-button-highlight);
+  border-right-color: var(--win95-button-shadow);
+  border-bottom-color: var(--win95-button-shadow);
+  box-shadow: inset -1px -1px 0 0 var(--win95-gray-darker);
+}
+
+.resizeHandle::before {
+  content: '';
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, 
+    transparent 0%, 
+    transparent 25%, 
+    var(--win95-gray-darker) 25%, 
+    var(--win95-gray-darker) 37.5%, 
+    var(--win95-gray) 37.5%, 
+    var(--win95-gray) 50%, 
+    var(--win95-gray-darker) 50%, 
+    var(--win95-gray-darker) 62.5%, 
+    var(--win95-gray) 62.5%, 
+    var(--win95-gray) 75%, 
+    var(--win95-gray-darker) 75%
+  );
+} 
