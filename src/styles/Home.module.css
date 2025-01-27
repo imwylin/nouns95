@@ -3,20 +3,13 @@
 }
 
 .main {
-  position: relative;
-  z-index: 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
   min-height: 100vh;
   padding: 4rem 0;
-  gap: 0.5rem;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-  margin-bottom: 48px; /* Space for footer */
-  min-height: calc(100vh - 48px); /* Account for footer */
+  background: transparent;
 }
 
 .headerSection {
@@ -61,23 +54,20 @@
 .infoSection {
   width: 100%;
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: 1rem auto;
+  padding: 0 1rem;
 }
 
 .infoContent {
-  background: var(--win95-gray);
-  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
   font-size: 14px;
   line-height: 1.6;
   text-align: center;
   color: var(--win95-black);
-  box-shadow: 
-    inset -1px -1px 0 0 var(--win95-black),
-    inset 1px 1px 0 0 var(--win95-button-highlight),
-    inset -2px -2px 0 0 var(--win95-button-shadow),
-    inset 2px 2px 0 0 var(--win95-white);
 }
 
 .infoSection p {

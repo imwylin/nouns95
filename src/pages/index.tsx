@@ -121,7 +121,18 @@ const Home: NextPage = () => {
   }, []);
 
   return (
-    <div style={{ height: '100vh', overflow: 'hidden', backgroundColor }}>
+    <div style={{ 
+      height: '100vh', 
+      width: '100vw',
+      overflow: 'hidden',
+      backgroundImage: 'url(/clouds.png)',
+      backgroundSize: '100% 100%',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      position: 'fixed',
+      top: 0,
+      left: 0
+    }}>
       <Desktop openWindow={openWindow} isMobile={isMobile} />
       <Windows95 
         activeWindows={activeWindows}
