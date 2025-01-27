@@ -285,16 +285,14 @@ export const GovernanceContent = ({ inWindow = false }: { inWindow?: boolean }) 
     return (
       <>
         {!inWindow && <Navbar />}
-        <div className={styles.governanceWrapper}>
+        <div className={styles.pageWrapper}>
           <button 
             className={styles.backButton}
             onClick={() => setSelectedProposal(null)}
           >
             ← Back to Proposals
           </button>
-          <div className={styles.governanceContainer}>
-            <ProposalContent proposalId={selectedProposal} inWindow={inWindow} />
-          </div>
+          <ProposalContent proposalId={selectedProposal} inWindow={inWindow} />
         </div>
         {!inWindow && <Footer />}
       </>

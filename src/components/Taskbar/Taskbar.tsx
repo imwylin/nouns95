@@ -32,6 +32,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
   const [isMobile, setIsMobile] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [isErrorDialogReady, setIsErrorDialogReady] = useState(false);
   const router = useRouter();
   
   const getFormattedTime = () => {
@@ -194,6 +195,13 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
     ).id;
   };
 
+  // Update click handler to prevent event bubbling
+  const handleStartClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+    setActiveMenuItem(null);
+  };
+
   return (
     <>
       {showError && (
@@ -213,9 +221,9 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
       <div className={styles.taskbar}>
         <button 
           className={`${styles.startButton} ${isOpen ? styles.startButtonActive : ''}`}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleStartClick}
         >
-          <Image src="/programs.png" alt="" width={16} height={16} />
+          <Image src="/nouns95.png" alt="" width={16} height={16} />
           <span>Start</span>
         </button>
 

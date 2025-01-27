@@ -130,10 +130,15 @@
 }
 
 .startMenuContainer {
-  position: fixed;
-  bottom: 32px;
+  position: absolute;
+  bottom: 100%;
   left: 0;
   z-index: 9998;
+  display: none;
+}
+
+.startMenuContainer.open {
+  display: block;
 }
 
 .startMenu {
@@ -147,11 +152,6 @@
   border-right-color: var(--win95-button-shadow);
   padding: 2px;
   min-width: 180px;
-  display: none;
-}
-
-.startMenu.open {
-  display: flex;
 }
 
 .startMenuLeft {
@@ -159,15 +159,14 @@
   grid-template-columns: 23px 1fr;
   background: var(--win95-gray);
   width: 100%;
-  position: relative;
 }
 
 .sidebarContainer {
-  position: relative;
   background: #808080;
   border-right: 1px solid var(--win95-button-shadow);
   box-shadow: inset -1px 0 0 var(--win95-button-highlight);
   height: 100%;
+  position: relative;
 }
 
 .startMenuSideText {
@@ -175,7 +174,6 @@
   left: 2px;
   bottom: 6px;
   width: 23px;
-  height: 100%;
   font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
   font-size: 14px;
   writing-mode: vertical-rl;
@@ -202,6 +200,7 @@
   display: flex;
   flex-direction: column;
   padding: 2px 0;
+  background: var(--win95-gray);
 }
 
 .menuItem {
@@ -340,4 +339,4 @@
 .submenuItem:hover {
   background: var(--win95-blue);
   color: var(--win95-white);
-} 
+}
