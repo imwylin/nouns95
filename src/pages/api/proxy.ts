@@ -48,6 +48,22 @@ export default async function handler(req: NextRequest) {
           console.log('IE Script initialized');
           const baseUrl = '${url}';
 
+          function handleNavigation(targetUrl) {
+            try {
+              const absoluteUrl = new URL(targetUrl, baseUrl).href;
+              const proxyUrl = '/api/proxy?url=' + encodeURIComponent(absoluteUrl);
+              console.log('Navigating to:', proxyUrl);
+              
+              // Send message to parent window to handle navigation
+              window.parent.postMessage({
+                type: 'navigate',
+                url: absoluteUrl
+              }, '*');
+            } catch (err) {
+              console.error('Navigation error:', err);
+            }
+          }
+
           function handleClick(e) {
             const link = e.target.closest('a');
             if (!link) return;
@@ -62,15 +78,7 @@ export default async function handler(req: NextRequest) {
 
             e.preventDefault();
             console.log('Handling click for URL:', href);
-            
-            try {
-              const absoluteUrl = new URL(href, baseUrl).href;
-              const proxyUrl = '/api/proxy?url=' + encodeURIComponent(absoluteUrl);
-              console.log('Navigating to:', proxyUrl);
-              window.location.href = proxyUrl;
-            } catch (err) {
-              console.error('Navigation error:', err);
-            }
+            handleNavigation(href);
           }
 
           // Add click handler to document
@@ -90,10 +98,7 @@ export default async function handler(req: NextRequest) {
               const queryString = new URLSearchParams(formData).toString();
               const actionUrl = form.action || baseUrl;
               const targetUrl = actionUrl + (actionUrl.includes('?') ? '&' : '?') + queryString;
-              const proxyUrl = '/api/proxy?url=' + encodeURIComponent(targetUrl);
-              
-              console.log('Form submission to:', proxyUrl);
-              window.location.href = proxyUrl;
+              handleNavigation(targetUrl);
             }
           }, true);
 

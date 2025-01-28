@@ -23,6 +23,7 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
   const navigateToUrl = useCallback((targetUrl: string) => {
     setError(null);
     setUrl(targetUrl);
+    setInputUrl(targetUrl);
     
     // Update history
     if (currentIndex.current < history.current.length - 1) {
@@ -75,6 +76,18 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
   const handleIframeError = () => {
     setError('The page failed to load. Please check the URL and try again.');
   };
+
+  // Handle messages from the proxy
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'navigate') {
+        navigateToUrl(event.data.url);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [navigateToUrl]);
 
   return (
     <div className={styles.internet}>
@@ -142,7 +155,7 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
       </div>
     </div>
   );
-};
+}
 
 const InternetPage = () => {
   return <InternetContent url="" />;
