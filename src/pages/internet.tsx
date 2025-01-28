@@ -150,7 +150,7 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
           title="Internet Explorer"
           className={styles.iframe}
           onError={handleIframeError}
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-top-navigation"
         />
       </div>
     </div>

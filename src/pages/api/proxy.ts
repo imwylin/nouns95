@@ -77,12 +77,39 @@ export default async function handler(req: NextRequest) {
             }
 
             e.preventDefault();
+            e.stopPropagation();
             console.log('Handling click for URL:', href);
             handleNavigation(href);
+            return false;
           }
 
           // Add click handler to document
           document.addEventListener('click', handleClick, true);
+
+          // Also handle all links directly
+          function processLinks() {
+            const links = document.getElementsByTagName('a');
+            for (let i = 0; i < links.length; i++) {
+              const link = links[i];
+              const href = link.getAttribute('href');
+              if (href && !href.startsWith('javascript:') && !href.startsWith('mailto:') && 
+                  !href.startsWith('tel:') && !href.startsWith('#')) {
+                link.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleNavigation(href);
+                  return false;
+                }, true);
+              }
+            }
+          }
+
+          // Process links initially and when DOM changes
+          processLinks();
+          new MutationObserver(processLinks).observe(document.body, {
+            childList: true,
+            subtree: true
+          });
 
           // Handle form submissions
           document.addEventListener('submit', function(e) {
@@ -92,6 +119,7 @@ export default async function handler(req: NextRequest) {
             const method = (form.method || 'get').toLowerCase();
             if (method === 'get') {
               e.preventDefault();
+              e.stopPropagation();
               console.log('Handling form submission');
               
               const formData = new FormData(form);
@@ -99,6 +127,7 @@ export default async function handler(req: NextRequest) {
               const actionUrl = form.action || baseUrl;
               const targetUrl = actionUrl + (actionUrl.includes('?') ? '&' : '?') + queryString;
               handleNavigation(targetUrl);
+              return false;
             }
           }, true);
 
