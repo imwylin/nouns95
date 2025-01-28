@@ -1,21 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fetch, { Response } from 'node-fetch';
-import { parse as parseUrl } from 'url';
-import { Readable } from 'stream';
-
-// Headers that we want to forward from the original response
-const ALLOWED_HEADERS = [
-  'content-type',
-  'content-length',
-  'cache-control',
-  'expires',
-  'pragma',
-  'etag',
-  'last-modified',
-  'content-encoding',
-  'content-language',
-  'content-disposition',
-] as const;
+import fetch from 'node-fetch';
 
 export const config = {
   runtime: 'edge',
@@ -41,7 +25,7 @@ export default async function handler(req: NextRequest) {
 
     const contentType = response.headers.get('content-type') || '';
     
-    // For non-HTML content, return directly
+    // For non-HTML content, return directly with CORS headers
     if (!contentType.includes('text/html')) {
       const arrayBuffer = await response.arrayBuffer();
       return new NextResponse(arrayBuffer, {
@@ -49,6 +33,8 @@ export default async function handler(req: NextRequest) {
         headers: {
           'Content-Type': contentType,
           'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': '*',
         },
       });
     }
@@ -59,89 +45,140 @@ export default async function handler(req: NextRequest) {
     const script = `
       <script>
         (function() {
+          console.log('IE Script initialized');
           const baseUrl = '${url}';
-          const base = document.createElement('base');
-          base.href = baseUrl;
-          document.head.prepend(base);
 
-          function handleNavigation(targetUrl) {
+          function handleClick(e) {
+            const link = e.target.closest('a');
+            if (!link) return;
+            
+            const href = link.getAttribute('href');
+            if (!href) return;
+            
+            if (href.startsWith('javascript:') || href.startsWith('mailto:') || 
+                href.startsWith('tel:') || href.startsWith('#')) {
+              return;
+            }
+
+            e.preventDefault();
+            console.log('Handling click for URL:', href);
+            
             try {
-              let absoluteUrl;
-              if (targetUrl.startsWith('//')) {
-                absoluteUrl = window.location.protocol + targetUrl;
-              } else if (targetUrl.startsWith('/')) {
-                const urlObj = new URL(baseUrl);
-                absoluteUrl = urlObj.origin + targetUrl;
-              } else if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
-                absoluteUrl = new URL(targetUrl, baseUrl).href;
-              } else {
-                absoluteUrl = targetUrl;
-              }
-              window.location.href = '/api/proxy?url=' + encodeURIComponent(absoluteUrl);
-            } catch (e) {
-              console.error('Failed to handle navigation:', e);
+              const absoluteUrl = new URL(href, baseUrl).href;
+              const proxyUrl = '/api/proxy?url=' + encodeURIComponent(absoluteUrl);
+              console.log('Navigating to:', proxyUrl);
+              window.location.href = proxyUrl;
+            } catch (err) {
+              console.error('Navigation error:', err);
             }
           }
 
-          document.addEventListener('click', (e) => {
-            const link = e.target.closest('a');
-            if (link) {
-              e.preventDefault();
-              e.stopPropagation();
-              const href = link.href || link.getAttribute('href');
-              if (href && !href.startsWith('javascript:') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
-                handleNavigation(href);
-              }
-            }
-          }, true);
+          // Add click handler to document
+          document.addEventListener('click', handleClick, true);
 
-          document.addEventListener('submit', (e) => {
-            e.preventDefault();
+          // Handle form submissions
+          document.addEventListener('submit', function(e) {
             const form = e.target;
-            const method = (form.method || 'get').toLowerCase();
+            if (!form || form.tagName.toLowerCase() !== 'form') return;
             
+            const method = (form.method || 'get').toLowerCase();
             if (method === 'get') {
+              e.preventDefault();
+              console.log('Handling form submission');
+              
               const formData = new FormData(form);
               const queryString = new URLSearchParams(formData).toString();
               const actionUrl = form.action || baseUrl;
               const targetUrl = actionUrl + (actionUrl.includes('?') ? '&' : '?') + queryString;
-              handleNavigation(targetUrl);
+              const proxyUrl = '/api/proxy?url=' + encodeURIComponent(targetUrl);
+              
+              console.log('Form submission to:', proxyUrl);
+              window.location.href = proxyUrl;
             }
           }, true);
+
+          // Proxy all resource requests
+          const originalFetch = window.fetch;
+          window.fetch = function(input, init) {
+            try {
+              const url = input instanceof Request ? input.url : input;
+              const absoluteUrl = new URL(url, baseUrl).href;
+              const proxyUrl = '/api/proxy?url=' + encodeURIComponent(absoluteUrl);
+              const newInput = input instanceof Request ? new Request(proxyUrl, input) : proxyUrl;
+              return originalFetch(newInput, init);
+            } catch (e) {
+              return originalFetch(input, init);
+            }
+          };
+
+          // Override XMLHttpRequest
+          const XHR = XMLHttpRequest.prototype;
+          const originalOpen = XHR.open;
+          XHR.open = function(method, url, ...args) {
+            try {
+              const absoluteUrl = new URL(url, baseUrl).href;
+              const proxyUrl = '/api/proxy?url=' + encodeURIComponent(absoluteUrl);
+              return originalOpen.call(this, method, proxyUrl, ...args);
+            } catch (e) {
+              return originalOpen.call(this, method, url, ...args);
+            }
+          };
+
+          console.log('IE Script setup complete');
         })();
       </script>
     `;
 
-    // Function to convert URLs to absolute
-    const getAbsoluteUrl = (path: string) => {
-      try {
-        if (path.startsWith('/')) {
-          const urlObj = new URL(url);
-          return urlObj.origin + path;
-        }
-        return new URL(path, url).href;
-      } catch (e) {
-        return path;
-      }
-    };
+    // Process the HTML content
+    let modifiedHtml = text;
 
-    // Modify relative URLs to absolute
-    const modifiedHtml = text
-      .replace(
-        /(href|src|action)="((?!javascript:|mailto:|tel:|data:|#|blob:|https?:\/\/|\/\/).*?)"/g,
-        (match: string, attr: string, path: string) => {
-          if (!path) return match;
-          return `${attr}="${getAbsoluteUrl(path)}"`;
+    // Remove existing base tags and CSP meta tags
+    modifiedHtml = modifiedHtml.replace(/<base[^>]*>/gi, '');
+    modifiedHtml = modifiedHtml.replace(/<meta[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>/gi, '');
+
+    // Add our base tag and meta tags
+    const headContent = `
+      <base href="${url}">
+      <meta name="referrer" content="no-referrer">
+      <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+      ${script}
+    `;
+
+    // Insert head content
+    if (modifiedHtml.includes('</head>')) {
+      modifiedHtml = modifiedHtml.replace('</head>', `${headContent}</head>`);
+    } else if (modifiedHtml.includes('<body')) {
+      modifiedHtml = modifiedHtml.replace('<body', `<head>${headContent}</head><body`);
+    } else {
+      modifiedHtml = `<head>${headContent}</head>${modifiedHtml}`;
+    }
+
+    // Convert relative URLs to absolute for resources
+    modifiedHtml = modifiedHtml.replace(
+      /(src|href|action)="(?!javascript:|data:|#|blob:|https?:\/\/|\/\/)(.*?)"/gi,
+      (match, attr, path) => {
+        if (!path) return match;
+        try {
+          const absoluteUrl = new URL(path, url).href;
+          return `${attr}="${absoluteUrl}"`;
+        } catch (e) {
+          return match;
         }
-      )
-      .replace('</head>', `${script}</head>`);
+      }
+    );
+
+    // Remove CSP headers from the response
+    const headers = new Headers({
+      'Content-Type': 'text/html',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': '*',
+      'Cache-Control': 'no-store, must-revalidate',
+    });
 
     return new NextResponse(modifiedHtml, {
       status: response.status,
-      headers: {
-        'Content-Type': 'text/html',
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers,
     });
   } catch (error) {
     console.error('Proxy error:', error);
