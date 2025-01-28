@@ -63,10 +63,13 @@ const Home: NextPage = () => {
         size = { width: 1024, height: 768 };
       } else if (id === '/' || id === '/auction') {
         icon = '/auction.png';
-        size = { width: 600, height: 650 };
+        size = { width: 950, height: 550 };
       } else if (id === '/governance') {
         icon = '/governance.png';
         size = { width: 800, height: 600 };
+      } else if (id === '/help') {
+        icon = '/help.png';
+        size = { width: 400, height: 300 };
       }
       
       return [...prev, { 

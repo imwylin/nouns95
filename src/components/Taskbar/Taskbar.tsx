@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import ErrorDialog from '../ErrorDialog/ErrorDialog';
 
 interface Window {
   id: string;
@@ -19,12 +18,14 @@ interface Window {
 interface TaskbarProps {
   activeWindows: Window[];
   onWindowSelect: (id: string) => void;
-  openWindow: (id: string, title: string, content: React.ReactNode) => void;
+  openWindow: (id: string, title: string, content: React.ReactNode, options?: { icon?: string }) => void;
 }
 
 const Studio = dynamic(() => import('../../pages/studio'), { ssr: false });
 const Auction = dynamic(() => import('../../pages/auction'), { ssr: false });
 const GovernanceContent = dynamic(() => import('../../pages/governance').then(mod => ({ default: mod.GovernanceContent })), { ssr: false });
+const HelpContent = dynamic(() => import('../../pages/help').then(mod => ({ default: mod.HelpContent })), { ssr: false });
+const InternetContent = dynamic(() => import('../../pages/internet').then(mod => ({ default: mod.InternetContent })), { ssr: false });
 
 const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWindow }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -108,11 +109,29 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
       ]
     },
     { type: 'divider' as const },
-    { label: 'Explore', icon: '/nounsworld.gif', href: 'https://nouns.world', external: true },
-    { label: 'Probe', icon: '/probe.png', href: 'https://probe.wtf', external: true },
+    {
+      label: 'Explore',
+      icon: '/nounsworld.gif',
+      onClick: () => {
+        setIsOpen(false);
+        openWindow('/internet', 'Internet Explorer', <InternetContent url="https://nouns.world" />, { icon: '/internetexplorer.png' });
+      }
+    },
+    {
+      label: 'Probe',
+      icon: '/probe.png',
+      href: 'https://probe.wtf',
+      external: true
+    },
+    {
+      label: 'Data',
+      icon: '/game.png',
+      href: 'https://nouns.game/data',
+      external: true
+    },
     { label: 'Help', icon: '/help.png', onClick: () => {
-      setShowHelp(true);
       setIsOpen(false);
+      openWindow('/help', 'Help', <HelpContent />, { icon: '/help.png' });
     }},
     { type: 'divider' as const },
     { label: 'Shut Down...', icon: '/shutdown.png', onClick: () => {
@@ -136,7 +155,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
       if (item.onClick) {
         item.onClick();
       } else if (item.external) {
-        window.open(item.href, '_blank');
+        openWindow('/internet', 'Internet Explorer', <InternetContent url={item.href} />, { icon: '/internetexplorer.png' });
       } else if (item.href) {
         const content = item.href === '/studio' 
           ? <Studio /> 
@@ -144,8 +163,10 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
             ? <Auction />
             : item.href === '/governance'
               ? <GovernanceContent inWindow={isMobile} />
-              : <div>Loading {item.label}...</div>;
-        openWindow(item.href, item.label, content);
+              : item.href === '/help'
+                ? <HelpContent />
+                : <div>Loading {item.label}...</div>;
+        openWindow(item.href, item.label, content, { icon: item.icon });
       }
     }
   };
@@ -161,7 +182,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
             setIsOpen(false);
             setActiveMenuItem(null);
             if (subItem.external) {
-              window.open(subItem.href, '_blank');
+              openWindow('/internet', 'Internet Explorer', <InternetContent url={subItem.href} />, { icon: '/internetexplorer.png' });
             } else {
               const content = subItem.href === '/studio' 
                 ? <Studio /> 
@@ -170,7 +191,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
                   : subItem.href === '/governance'
                     ? <GovernanceContent inWindow={isMobile} />
                     : <div>Loading {subItem.label}...</div>;
-              openWindow(subItem.href, subItem.label, content);
+              openWindow(subItem.href, subItem.label, content, { icon: subItem.icon });
             }
           }}
         >
@@ -204,19 +225,6 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
 
   return (
     <>
-      {showError && (
-        <ErrorDialog
-          message={`Modern browsers prevent web pages from closing tabs for security reasons.\n\nPress Ctrl+W (or Cmd+W on a Mac,) to close this tab manually.`}
-          onClose={() => setShowError(false)}
-        />
-      )}
-
-      {showHelp && (
-        <ErrorDialog
-          message="Coming soon"
-          onClose={() => setShowHelp(false)}
-        />
-      )}
 
       <div className={styles.taskbar}>
         <button 
@@ -251,7 +259,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
                         alt={item.label} 
                         width={item.label === 'Programs' || item.label === 'Settings' || item.label === 'Help' ? 32 : 16} 
                         height={item.label === 'Programs' || item.label === 'Settings' || item.label === 'Help' ? 32 : 16} 
-                        style={item.label === 'Explore' ? { width: '16px', height: '16px' } : undefined}
+                        style={item.label === 'Explore' || item.label === 'Data' ? { width: '16px', height: '16px' } : undefined}
                       />
                       <span>{item.label}</span>
                       {item.hasSubmenu && (
@@ -275,15 +283,19 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
                 ? '/auction.png'
                 : window.id === '/governance'
                   ? '/governance.png'
-                  : '/nouns95.png';
-            const iconSize = window.id === '/studio' ? 16 : 32;
+                  : window.id === '/help'
+                    ? '/help.png'
+                    : window.id === '/internet'
+                      ? '/internetexplorer.png'
+                      : '/nouns95.png';
+            const iconSize = window.id === '/studio' || window.id === '/internet' ? 16 : 32;
             return (
               <div
                 key={window.id}
                 className={`${styles.activeApp} ${isActiveWindow ? styles.activeAppPressed : ''}`}
                 onClick={() => onWindowSelect(window.id)}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: window.id === '/studio' ? '4px' : '0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: window.id === '/studio' || window.id === '/internet' ? '4px' : '0' }}>
                   <Image 
                     src={icon} 
                     alt={window.title} 

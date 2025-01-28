@@ -767,21 +767,9 @@ export const ProposalContent = ({ proposalId, inWindow = false }: { proposalId: 
               <div className={styles.transactions}>
                 <div className={styles.transactionsHeader}>
                   <h2 className={styles.sectionTitle}>Transactions</h2>
-                  <TransactionSimulation proposal={proposal} />
+                  {/* Temporarily removed TransactionSimulation */}
                 </div>
-                {console.log('Full proposal data:', {
-                  targets: proposal.targets,
-                  values: proposal.values,
-                  signatures: proposal.signatures,
-                  calldatas: proposal.calldatas
-                })}
                 {proposal.targets.map((target: string, index: number) => {
-                  console.log(`Transaction ${index}:`, {
-                    target,
-                    value: proposal.values[index],
-                    signature: proposal.signatures[index],
-                    calldata: proposal.calldatas[index]
-                  });
                   return (
                     <div key={index} className={styles.transaction}>
                       <div className={styles.transactionHeader}>

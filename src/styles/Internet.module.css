@@ -1,0 +1,203 @@
+.internet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--win95-gray);
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  border-bottom: 1px solid var(--win95-button-shadow);
+  background: var(--win95-gray);
+  flex-shrink: 0;
+}
+
+.navigationBar {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  background: var(--win95-gray);
+  border: 1px solid var(--win95-button-highlight);
+  border-top-color: var(--win95-button-highlight);
+  border-left-color: var(--win95-button-highlight);
+  border-bottom-color: var(--win95-button-shadow);
+  border-right-color: var(--win95-button-shadow);
+  box-shadow: inset -1px -1px 0 0 var(--win95-gray-darker);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.navButton:active:not(:disabled) {
+  border: 1px solid var(--win95-button-shadow);
+  border-top-color: var(--win95-button-shadow);
+  border-left-color: var(--win95-button-shadow);
+  border-bottom-color: var(--win95-button-highlight);
+  border-right-color: var(--win95-button-highlight);
+  box-shadow: inset 1px 1px 0 0 var(--win95-button-shadow);
+  padding: 3px 1px 1px 3px;
+}
+
+.addressBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  background: var(--win95-white);
+  border: 1px solid var(--win95-button-shadow);
+  box-shadow: inset 1px 1px 0 0 var(--win95-button-shadow);
+  min-width: 0;
+}
+
+.addressLabel {
+  font-size: 11px;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.addressInput {
+  flex: 1;
+  font-size: 11px;
+  padding: 1px 4px;
+  color: var(--win95-black);
+  background: var(--win95-white);
+  border: none;
+  outline: none;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+  min-width: 0;
+  width: 0;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  background: var(--win95-white);
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--win95-gray);
+  padding: 16px;
+  border: 1px solid var(--win95-button-shadow);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+  max-width: 80%;
+  width: 400px;
+}
+
+.messageText {
+  flex: 1;
+}
+
+.messageText h3 {
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--win95-black);
+}
+
+.messageText p {
+  font-size: 11px;
+  color: var(--win95-black);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.messageText p:last-child {
+  margin-bottom: 0;
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+  background: var(--win95-gray);
+  padding: 16px;
+  border: 1px solid var(--win95-button-shadow);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+}
+
+.loading span {
+  font-size: 11px;
+  color: var(--win95-black);
+}
+
+.error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--win95-gray);
+  padding: 16px;
+  border: 1px solid var(--win95-button-shadow);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+  max-width: 80%;
+  width: 400px;
+}
+
+.errorMessage {
+  flex: 1;
+}
+
+.errorMessage h3 {
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--win95-black);
+}
+
+.errorMessage p {
+  font-size: 11px;
+  color: var(--win95-black);
+  line-height: 1.4;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  z-index: 0;
+  pointer-events: auto;
+} 

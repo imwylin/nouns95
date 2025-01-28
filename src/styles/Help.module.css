@@ -1,0 +1,23 @@
+.help {
+  padding: 16px;
+  font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif;
+}
+
+.title {
+  font-size: 14px;
+  color: var(--win95-white);
+  margin-bottom: 16px;
+  padding: 4px 8px;
+  background: var(--win95-blue);
+  box-shadow: inset -1px -1px 0 0 var(--win95-black), inset 1px 1px 0 0 var(--win95-button-highlight);
+}
+
+.content {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.list {
+  padding-left: 20px;
+  margin-top: 8px;
+} 

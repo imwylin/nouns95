@@ -13,6 +13,8 @@
   padding: 8px;
   min-height: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .main {
@@ -20,9 +22,11 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .inWindow .main {
+  flex: 1;
   overflow: hidden;
 }
 
@@ -31,20 +35,114 @@
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 1rem;
   height: 100%;
+  overflow: hidden;
+  min-height: 0; /* Required for nested grid scrolling */
 }
 
 .inWindow .proposalContainer {
   overflow: hidden;
+  height: calc(100% - 32px); /* Account for back button */
 }
 
 .proposalContent {
-  overflow-y: auto;
+  overflow-y: scroll;
   padding-right: 8px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Required for nested flex scrolling */
+  scrollbar-width: auto;
+  scrollbar-color: var(--win95-gray) var(--win95-button-face);
+}
+
+.proposalContent::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+.proposalContent::-webkit-scrollbar-track {
+  background: var(--win95-button-face);
+  border-left: 1px solid var(--win95-button-shadow);
+}
+
+.proposalContent::-webkit-scrollbar-thumb {
+  background: var(--win95-gray);
+  border: 1px solid var(--win95-black);
+  border-top-color: var(--win95-button-highlight);
+  border-left-color: var(--win95-button-highlight);
+  box-shadow: inset -1px -1px 0 0 var(--win95-button-shadow);
+}
+
+.proposalContent::-webkit-scrollbar-button:single-button {
+  background: var(--win95-button-face);
+  border: 1px solid var(--win95-black);
+  border-top-color: var(--win95-button-highlight);
+  border-left-color: var(--win95-button-highlight);
+  box-shadow: inset -1px -1px 0 0 var(--win95-button-shadow);
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.proposalContent::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path d='M4 10l4-4 4 4z' fill='black'/></svg>");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.proposalContent::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4z' fill='black'/></svg>");
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .activitySection {
   overflow-y: auto;
   padding-right: 8px;
+  max-height: 100%;
+  scrollbar-width: auto;
+  scrollbar-color: var(--win95-gray) var(--win95-button-face);
+}
+
+.activitySection::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+.activitySection::-webkit-scrollbar-track {
+  background: var(--win95-button-face);
+  border-left: 1px solid var(--win95-button-shadow);
+}
+
+.activitySection::-webkit-scrollbar-thumb {
+  background: var(--win95-gray);
+  border: 1px solid var(--win95-black);
+  border-top-color: var(--win95-button-highlight);
+  border-left-color: var(--win95-button-highlight);
+  box-shadow: inset -1px -1px 0 0 var(--win95-button-shadow);
+}
+
+.activitySection::-webkit-scrollbar-button:single-button {
+  background: var(--win95-button-face);
+  border: 1px solid var(--win95-black);
+  border-top-color: var(--win95-button-highlight);
+  border-left-color: var(--win95-button-highlight);
+  box-shadow: inset -1px -1px 0 0 var(--win95-button-shadow);
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.activitySection::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path d='M4 10l4-4 4 4z' fill='black'/></svg>");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.activitySection::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4z' fill='black'/></svg>");
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .proposalHeader {
@@ -52,6 +150,7 @@
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .backButton {
@@ -222,6 +321,7 @@
     inset -1px -1px 0 0 var(--win95-button-highlight);
   overflow-wrap: break-word;
   max-width: 100%;
+  flex: 1;
 }
 
 /* Markdown styles */
@@ -775,6 +875,7 @@
     inset 1px 1px 0 0 var(--win95-button-highlight),
     inset -2px -2px 0 0 var(--win95-button-shadow),
     inset 2px 2px 0 0 var(--win95-white);
+  flex-shrink: 0; /* Prevent transactions section from shrinking */
 }
 
 .transaction {

@@ -284,7 +284,7 @@ export const GovernanceContent = ({ inWindow = false }: { inWindow?: boolean }) 
   if (selectedProposal) {
     return (
       <>
-        {!inWindow && <Navbar />}
+        <Navbar />
         <div className={styles.pageWrapper}>
           <button 
             className={styles.backButton}
@@ -294,183 +294,185 @@ export const GovernanceContent = ({ inWindow = false }: { inWindow?: boolean }) 
           </button>
           <ProposalContent proposalId={selectedProposal} inWindow={inWindow} />
         </div>
-        {!inWindow && <Footer />}
+        <Footer />
       </>
     );
   }
 
   return (
     <>
-      {!inWindow && <Navbar />}
-      <div className={`${styles.governanceContainer} ${isMobile ? styles.inWindow : ''}`}>
-        {/* Show tabs only on mobile */}
-        {isMobile && (
-          <div className={styles.mobileTabs}>
-            <button 
-              className={`${styles.mobileTab} ${activeTab === 'votes' ? styles.active : ''}`}
-              onClick={() => setActiveTab('votes')}
-            >
-              Votes & Signals
-            </button>
-            <button 
-              className={`${styles.mobileTab} ${activeTab === 'proposals' ? styles.active : ''}`}
-              onClick={() => setActiveTab('proposals')}
-            >
-              Proposals
-            </button>
-          </div>
-        )}
-
-        <div className={`${styles.feedSection} ${isMobile ? (activeTab === 'votes' ? styles.active : '') : ''}`}>
-          <h1 className={styles.title}>Votes & Signals</h1>
-          
-          {error && <div className={styles.error}>Error: {error.message}</div>}
-          
-          <div className={styles.feedbackList}>
-            {feedItems.map((item) => (
-              <div 
-                key={item.id} 
-                className={styles.feedbackItem}
-                onClick={() => setSelectedItem(selectedItem === item.id ? null : item.id)}
+      <Navbar />
+      <div className={styles.pageWrapper}>
+        <div className={`${styles.governanceContainer} ${isMobile ? styles.inWindow : ''}`}>
+          {/* Show tabs only on mobile */}
+          {isMobile && (
+            <div className={styles.mobileTabs}>
+              <button 
+                className={`${styles.mobileTab} ${activeTab === 'votes' ? styles.active : ''}`}
+                onClick={() => setActiveTab('votes')}
               >
-                <div className={styles.feedbackHeader}>
-                  <div className={styles.voterInfo}>
-                    <img 
-                      src={`https://cdn.stamp.fyi/avatar/${item.voter.id}`}
-                      alt=""
-                      className={styles.avatar}
-                    />
-                    <ENSName address={item.voter.id} />
-                    <Link 
-                      href={`/proposal/${item.proposal.id}`}
-                      className={styles.proposalId}
-                      onClick={(e) => handleProposalClick(e, item.proposal.id)}
-                    >
-                      Proposal {item.proposal.id}
-                    </Link>
-                  </div>
-                  <div className={styles.feedbackMeta}>
-                    <span className={styles.support}>
-                      {item.type === 'signal' ? 'Signaled' : 'Voted'} {getSupportType(item.support, item.type === 'vote')}
-                    </span>
-                    <span className={styles.votes}>
-                      {parseInt(item.votes)} {parseInt(item.votes) === 1 ? 'vote' : 'votes'}
-                    </span>
-                    <span className={styles.timestamp}>
-                      {formatDate(item.timestamp)}
-                    </span>
-                  </div>
-                </div>
-                
-                {selectedItem === item.id && item.reason && (
-                  <div className={styles.feedbackReason}>
-                    <p>{item.reason || 'No reason provided'}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={`${styles.feedSection} ${isMobile ? (activeTab === 'proposals' ? styles.active : '') : ''}`}>
-          <div className={styles.proposalsHeader}>
-            <h1 className={styles.title}>Proposals</h1>
-            <div className={styles.proposalToggle}>
-              <button
-                className={`${styles.toggleButton} ${!showCandidates ? styles.active : ''}`}
-                onClick={() => setShowCandidates(false)}
-              >
-                Active
+                Votes & Signals
               </button>
-              <button
-                className={`${styles.toggleButton} ${showCandidates ? styles.active : ''}`}
-                onClick={() => setShowCandidates(true)}
+              <button 
+                className={`${styles.mobileTab} ${activeTab === 'proposals' ? styles.active : ''}`}
+                onClick={() => setActiveTab('proposals')}
               >
-                Candidates
+                Proposals
               </button>
             </div>
-          </div>
-          
-          {error && <div className={styles.error}>Error: {error.message}</div>}
-          
-          <div className={styles.proposalsList}>
-            {showCandidates ? (
-              candidatesData?.proposalCandidates.map((candidate: ProposalCandidate) => (
-                <div key={candidate.id} className={styles.proposalItem}>
-                  <div className={styles.proposalHeader}>
-                    <div className={styles.proposalTopRow}>
-                      <div className={styles.proposerInfo}>
-                        <img 
-                          src={`https://cdn.stamp.fyi/avatar/${candidate.latestVersion.content.proposer}`}
-                          alt=""
-                          className={styles.avatar}
-                        />
-                        <ENSName address={candidate.latestVersion.content.proposer} />
-                      </div>
-                      <span className={styles.timestamp}>
-                        {formatDate(candidate.createdTimestamp)}
-                      </span>
-                    </div>
+          )}
 
-                    {candidate.latestVersion.content.contentSignatures.length > 0 && (
-                      <div className={styles.sponsorInfo}>
-                        • Sponsored by{' '}
-                        {candidate.latestVersion.content.contentSignatures.map((sig, index) => (
-                          <span key={sig.id}>
-                            {index > 0 && ', '}
-                            <ENSName address={sig.signer.id} />
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className={styles.titleBox}>
-                      <Link href={`/candidate/${candidate.id}`} className={styles.candidateLink}>
-                        {candidate.latestVersion.content.title}
+          <div className={`${styles.feedSection} ${isMobile ? (activeTab === 'votes' ? styles.active : '') : ''}`}>
+            <h1 className={styles.title}>Votes & Signals</h1>
+            
+            {error && <div className={styles.error}>Error: {error.message}</div>}
+            
+            <div className={styles.feedbackList}>
+              {feedItems.map((item) => (
+                <div 
+                  key={item.id} 
+                  className={styles.feedbackItem}
+                  onClick={() => setSelectedItem(selectedItem === item.id ? null : item.id)}
+                >
+                  <div className={styles.feedbackHeader}>
+                    <div className={styles.voterInfo}>
+                      <img 
+                        src={`https://cdn.stamp.fyi/avatar/${item.voter.id}`}
+                        alt=""
+                        className={styles.avatar}
+                      />
+                      <ENSName address={item.voter.id} />
+                      <Link 
+                        href={`/proposal/${item.proposal.id}`}
+                        className={styles.proposalId}
+                        onClick={(e) => handleProposalClick(e, item.proposal.id)}
+                      >
+                        Proposal {item.proposal.id}
                       </Link>
                     </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              proposalsData?.proposals.map((proposal: Proposal) => (
-                <div 
-                  key={proposal.id} 
-                  className={styles.proposalItem}
-                >
-                  <div className={styles.proposalHeader}>
-                    <div className={styles.proposalTopRow}>
-                      <div className={styles.proposalInfo}>
-                        <Link 
-                          href={`/proposal/${proposal.id}`}
-                          className={styles.proposalId}
-                          onClick={(e) => handleProposalClick(e, proposal.id)}
-                        >
-                          Proposal {proposal.id}
-                        </Link>
-                        <span className={styles.proposalTitle}>{proposal.title}</span>
-                      </div>
-                      <span className={styles.proposalStatus}>
-                        {getProposalStatus(proposal)}
+                    <div className={styles.feedbackMeta}>
+                      <span className={styles.support}>
+                        {item.type === 'signal' ? 'Signaled' : 'Voted'} {getSupportType(item.support, item.type === 'vote')}
                       </span>
-                    </div>
-                    <div className={styles.proposalMeta}>
-                      <span className={styles.proposer}>
-                        <ENSName address={proposal.proposer.id} />
+                      <span className={styles.votes}>
+                        {parseInt(item.votes)} {parseInt(item.votes) === 1 ? 'vote' : 'votes'}
                       </span>
-                      •
                       <span className={styles.timestamp}>
-                        {formatDate(proposal.createdTimestamp)}
+                        {formatDate(item.timestamp)}
                       </span>
                     </div>
                   </div>
+                  
+                  {selectedItem === item.id && item.reason && (
+                    <div className={styles.feedbackReason}>
+                      <p>{item.reason || 'No reason provided'}</p>
+                    </div>
+                  )}
                 </div>
-              ))
-            )}
+              ))}
+            </div>
+          </div>
+
+          <div className={`${styles.feedSection} ${isMobile ? (activeTab === 'proposals' ? styles.active : '') : ''}`}>
+            <div className={styles.proposalsHeader}>
+              <h1 className={styles.title}>Proposals</h1>
+              <div className={styles.proposalToggle}>
+                <button
+                  className={`${styles.toggleButton} ${!showCandidates ? styles.active : ''}`}
+                  onClick={() => setShowCandidates(false)}
+                >
+                  Active
+                </button>
+                <button
+                  className={`${styles.toggleButton} ${showCandidates ? styles.active : ''}`}
+                  onClick={() => setShowCandidates(true)}
+                >
+                  Candidates
+                </button>
+              </div>
+            </div>
+            
+            {error && <div className={styles.error}>Error: {error.message}</div>}
+            
+            <div className={styles.proposalsList}>
+              {showCandidates ? (
+                candidatesData?.proposalCandidates.map((candidate: ProposalCandidate) => (
+                  <div key={candidate.id} className={styles.proposalItem}>
+                    <div className={styles.proposalHeader}>
+                      <div className={styles.proposalTopRow}>
+                        <div className={styles.proposerInfo}>
+                          <img 
+                            src={`https://cdn.stamp.fyi/avatar/${candidate.latestVersion.content.proposer}`}
+                            alt=""
+                            className={styles.avatar}
+                          />
+                          <ENSName address={candidate.latestVersion.content.proposer} />
+                        </div>
+                        <span className={styles.timestamp}>
+                          {formatDate(candidate.createdTimestamp)}
+                        </span>
+                      </div>
+
+                      {candidate.latestVersion.content.contentSignatures.length > 0 && (
+                        <div className={styles.sponsorInfo}>
+                          • Sponsored by{' '}
+                          {candidate.latestVersion.content.contentSignatures.map((sig, index) => (
+                            <span key={sig.id}>
+                              {index > 0 && ', '}
+                              <ENSName address={sig.signer.id} />
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className={styles.titleBox}>
+                        <Link href={`/candidate/${candidate.id}`} className={styles.candidateLink}>
+                          {candidate.latestVersion.content.title}
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                proposalsData?.proposals.map((proposal: Proposal) => (
+                  <div 
+                    key={proposal.id} 
+                    className={styles.proposalItem}
+                  >
+                    <div className={styles.proposalHeader}>
+                      <div className={styles.proposalTopRow}>
+                        <div className={styles.proposalInfo}>
+                          <Link 
+                            href={`/proposal/${proposal.id}`}
+                            className={styles.proposalId}
+                            onClick={(e) => handleProposalClick(e, proposal.id)}
+                          >
+                            Proposal {proposal.id}
+                          </Link>
+                          <span className={styles.proposalTitle}>{proposal.title}</span>
+                        </div>
+                        <span className={styles.proposalStatus}>
+                          {getProposalStatus(proposal)}
+                        </span>
+                      </div>
+                      <div className={styles.proposalMeta}>
+                        <span className={styles.proposer}>
+                          <ENSName address={proposal.proposer.id} />
+                        </span>
+                        •
+                        <span className={styles.timestamp}>
+                          {formatDate(proposal.createdTimestamp)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
-      {!inWindow && <Footer />}
+      <Footer />
     </>
   );
 };

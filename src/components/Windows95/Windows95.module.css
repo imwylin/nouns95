@@ -35,9 +35,12 @@
 }
 
 /* Add specific minimum dimensions for auction window */
+.window[data-window-id="/"],
 .window[data-window-id="/auction"] {
-  min-width: 600px !important;
-  min-height: 650px !important;
+  min-width: 950px !important;
+  min-height: 550px !important;
+  width: 950px;
+  height: 550px;
 }
 
 /* Keep existing studio window minimum dimensions */
@@ -130,10 +133,41 @@
 
 .windowContent {
   padding: 4px;
-  height: calc(100% - 24px);
-  overflow: hidden;
+  height: calc(100% - 18px); /* Subtract title bar height */
   background: var(--win95-gray);
   pointer-events: all;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Add specific styles for navbar, content, and footer in window */
+.windowContent > :global(nav) {
+  flex-shrink: 0;
+  margin: -4px -4px 4px -4px;
+  width: calc(100% + 8px);
+}
+
+.windowContent > :global(footer) {
+  flex-shrink: 0;
+  margin: 4px -4px -4px -4px;
+  width: calc(100% + 8px);
+}
+
+.windowContent > :global(div) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Add specific minimum dimensions for governance window */
+.window[data-window-id="/governance"] {
+  min-width: 950px !important;
+  min-height: 600px !important;
+  width: 950px;
+  height: 600px;
 }
 
 .resizeHandle {

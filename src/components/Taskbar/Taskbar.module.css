@@ -206,25 +206,25 @@
 .menuItem {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px 4px 36px;
-  min-height: 32px;
+  gap: 8px;
+  padding: 3px 8px 3px 40px;
+  min-height: 24px;
   text-decoration: none;
   color: var(--win95-black);
   cursor: pointer;
   position: relative;
   font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
   font-size: 11px;
-  padding-right: 16px;
+  white-space: nowrap;
 }
 
-.menuItem span {
-  margin-left: 2px;
+.menuItem:first-child {
+  margin-top: 0;
 }
 
 .menuItem img {
   position: absolute;
-  left: 2px;
+  left: 4px;
   top: 50%;
   transform: translateY(-50%);
   width: 16px;
@@ -238,11 +238,13 @@
 .menuItem img[src*="help"] {
   width: 32px !important;
   height: 32px !important;
+  left: 2px;
 }
 
 /* All other menu items */
 .menuItem img[src*="nounsworld"],
 .menuItem img[src*="probe"],
+.menuItem img[src*="game"],
 .menuItem img[src*="nouns95"],
 .menuItem img[src*="shutdown"] {
   left: 10px;
@@ -293,8 +295,8 @@
 
 .submenu {
   position: absolute;
-  left: 100%;
-  top: 0;
+  left: calc(100% + 4px);
+  top: -6px;
   background: var(--win95-gray);
   border: 2px solid;
   border-top-color: var(--win95-button-highlight);
@@ -302,7 +304,8 @@
   border-bottom-color: var(--win95-button-shadow);
   border-right-color: var(--win95-button-shadow);
   padding: 2px;
-  min-width: 160px;
+  min-width: 180px;
+  z-index: 1;
   display: none;
 }
 
