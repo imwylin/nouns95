@@ -7,8 +7,9 @@ interface InternetContentProps {
 }
 
 export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUrl }) => {
-  const [url, setUrl] = useState(initialUrl);
-  const [inputUrl, setInputUrl] = useState(initialUrl);
+  const [url, setUrl] = useState(initialUrl || 'https://www.google.com');
+  const [inputUrl, setInputUrl] = useState(initialUrl || 'https://www.google.com');
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const history = useRef<string[]>([]);
@@ -21,31 +22,43 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
   }, [initialUrl]);
 
   const navigateToUrl = useCallback((targetUrl: string) => {
-    setError(null);
-    setUrl(targetUrl);
-    setInputUrl(targetUrl);
+    let processedUrl = targetUrl;
     
-    // Update history
-    if (currentIndex.current < history.current.length - 1) {
-      // If we're not at the end of history, remove future entries
-      history.current = history.current.slice(0, currentIndex.current + 1);
+    // Add https:// if no protocol is specified
+    if (!processedUrl.match(/^https?:\/\//i)) {
+      processedUrl = 'https://' + processedUrl;
     }
-    history.current.push(targetUrl);
-    currentIndex.current = history.current.length - 1;
-    
-    // Update iframe src to use our proxy
-    if (iframeRef.current) {
-      iframeRef.current.src = `/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+
+    try {
+      // Validate URL
+      new URL(processedUrl);
+      
+      setError(null);
+      setIsLoading(true);
+      setUrl(processedUrl);
+      setInputUrl(processedUrl);
+      
+      // Update history
+      if (currentIndex.current < history.current.length - 1) {
+        // If we're not at the end of history, remove future entries
+        history.current = history.current.slice(0, currentIndex.current + 1);
+      }
+      history.current.push(processedUrl);
+      currentIndex.current = history.current.length - 1;
+      
+      // Update iframe src to use our proxy
+      if (iframeRef.current) {
+        iframeRef.current.src = `/api/proxy?url=${encodeURIComponent(processedUrl)}`;
+      }
+    } catch (e) {
+      setError('Invalid URL. Please check the address and try again.');
+      setIsLoading(false);
     }
   }, []);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      let newUrl = inputUrl;
-      if (!newUrl.startsWith('http://') && !newUrl.startsWith('https://')) {
-        newUrl = 'https://' + newUrl;
-      }
-      navigateToUrl(newUrl);
+      navigateToUrl(inputUrl);
     }
   };
 
@@ -53,19 +66,11 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
     if (action === 'back' && currentIndex.current > 0) {
       currentIndex.current--;
       const previousUrl = history.current[currentIndex.current];
-      setUrl(previousUrl);
-      setInputUrl(previousUrl);
-      if (iframeRef.current) {
-        iframeRef.current.src = `/api/proxy?url=${encodeURIComponent(previousUrl)}`;
-      }
+      navigateToUrl(previousUrl);
     } else if (action === 'forward' && currentIndex.current < history.current.length - 1) {
       currentIndex.current++;
       const nextUrl = history.current[currentIndex.current];
-      setUrl(nextUrl);
-      setInputUrl(nextUrl);
-      if (iframeRef.current) {
-        iframeRef.current.src = `/api/proxy?url=${encodeURIComponent(nextUrl)}`;
-      }
+      navigateToUrl(nextUrl);
     } else if (action === 'refresh') {
       navigateToUrl(url);
     } else if (action === 'home') {
@@ -73,8 +78,13 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
     }
   };
 
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
+
   const handleIframeError = () => {
     setError('The page failed to load. Please check the URL and try again.');
+    setIsLoading(false);
   };
 
   // Handle messages from the proxy
@@ -133,10 +143,15 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
             onChange={(e) => setInputUrl(e.target.value)}
             onKeyPress={handleKeyPress}
           />
+          {isLoading && (
+            <div className={styles.loadingIndicator}>
+              <Image src="/loading.gif" alt="Loading" width={16} height={16} />
+            </div>
+          )}
         </div>
       </div>
       <div className={styles.content}>
-        {error && (
+        {error ? (
           <div className={styles.error}>
             <Image src="/error.png" alt="Error" width={32} height={32} />
             <div className={styles.errorMessage}>
@@ -144,14 +159,16 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
               <p>{error}</p>
             </div>
           </div>
+        ) : (
+          <iframe 
+            ref={iframeRef}
+            title="Internet Explorer"
+            className={styles.iframe}
+            onLoad={handleIframeLoad}
+            onError={handleIframeError}
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+          />
         )}
-        <iframe 
-          ref={iframeRef}
-          title="Internet Explorer"
-          className={styles.iframe}
-          onError={handleIframeError}
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-top-navigation"
-        />
       </div>
     </div>
   );
