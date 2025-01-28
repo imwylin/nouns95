@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './Windows95.module.css';
 import Image from 'next/image';
 
@@ -49,66 +49,61 @@ const BaseWindow: React.FC<BaseWindowProps> = ({
     size: { width: 0, height: 0 }
   });
 
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isDragging) {
+      const deltaX = e.clientX - startPosRef.current.x;
+      const deltaY = e.clientY - startPosRef.current.y;
+
+      // Calculate new position
+      const newY = Math.max(0, initialStateRef.current.position.y + deltaY);
+      
+      onMove(id, {
+        x: initialStateRef.current.position.x + deltaX,
+        y: newY
+      });
+    } else if (isResizing) {
+      const deltaX = e.clientX - startPosRef.current.x;
+      const deltaY = e.clientY - startPosRef.current.y;
+
+      const newWidth = Math.max(minWidth, initialStateRef.current.size.width + deltaX);
+      const newHeight = Math.max(minHeight, initialStateRef.current.size.height + deltaY);
+
+      onMove(id, position || { x: 0, y: 0 }, {
+        width: newWidth,
+        height: newHeight
+      });
+    }
+  }, [id, isDragging, isResizing, minWidth, minHeight, onMove, position]);
+
+  const handleMouseUp = useCallback((e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    setIsResizing(false);
+    document.body.style.cursor = 'default';
+  }, []);
+
+  const handleWindowBlur = useCallback(() => {
+    setIsDragging(false);
+    setIsResizing(false);
+    document.body.style.cursor = 'default';
+  }, []);
+
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        const deltaX = e.clientX - startPosRef.current.x;
-        const deltaY = e.clientY - startPosRef.current.y;
-
-        onMove(id, {
-          x: initialStateRef.current.position.x + deltaX,
-          y: initialStateRef.current.position.y + deltaY
-        });
-      } else if (isResizing) {
-        const deltaX = e.clientX - startPosRef.current.x;
-        const deltaY = e.clientY - startPosRef.current.y;
-
-        const newWidth = Math.max(minWidth, initialStateRef.current.size.width + deltaX);
-        const newHeight = Math.max(minHeight, initialStateRef.current.size.height + deltaY);
-
-        onMove(id, position || { x: 0, y: 0 }, {
-          width: newWidth,
-          height: newHeight
-        });
-      }
-    };
-
-    const handleMouseUp = (e: Event) => {
-      if (isDragging || isResizing) {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(false);
-        setIsResizing(false);
-        document.body.style.cursor = 'default';
-      }
-    };
-
-    const handleWindowBlur = () => {
-      if (isDragging || isResizing) {
-        setIsDragging(false);
-        setIsResizing(false);
-        document.body.style.cursor = 'default';
-      }
-    };
-
     if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove, { capture: true });
       document.addEventListener('mouseup', handleMouseUp, { capture: true });
       window.addEventListener('blur', handleWindowBlur);
 
-      // Set cursor based on action
-      document.body.style.cursor = isResizing ? 'nw-resize' : 'move';
-
       return () => {
         document.removeEventListener('mousemove', handleMouseMove, { capture: true });
         document.removeEventListener('mouseup', handleMouseUp, { capture: true });
         window.removeEventListener('blur', handleWindowBlur);
-        document.body.style.cursor = 'default';
       };
     }
-  }, [id, isDragging, isResizing, minWidth, minHeight, onMove, position]);
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp, handleWindowBlur]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onSelect(id);
@@ -116,9 +111,10 @@ const BaseWindow: React.FC<BaseWindowProps> = ({
     setIsDragging(true);
     startPosRef.current = { x: e.clientX, y: e.clientY };
     initialStateRef.current.position = position || { x: 0, y: 0 };
-  };
+    document.body.style.cursor = 'move';
+  }, [id, onSelect, position]);
 
-  const handleResizeStart = (e: React.MouseEvent) => {
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (isMaximized) return;
@@ -128,7 +124,8 @@ const BaseWindow: React.FC<BaseWindowProps> = ({
     setIsResizing(true);
     startPosRef.current = { x: e.clientX, y: e.clientY };
     initialStateRef.current.size = size || { width: minWidth, height: minHeight };
-  };
+    document.body.style.cursor = 'nw-resize';
+  }, [id, isMaximized, minWidth, minHeight, onSelect, size]);
 
   const handleTitleBarButtonClick = (e: React.MouseEvent, action: 'minimize' | 'maximize' | 'close') => {
     e.stopPropagation();

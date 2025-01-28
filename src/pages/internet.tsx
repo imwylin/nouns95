@@ -11,6 +11,7 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
   const [inputUrl, setInputUrl] = useState(initialUrl || 'https://www.google.com');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [useBrowser, setUseBrowser] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const history = useRef<string[]>([]);
   const currentIndex = useRef<number>(-1);
@@ -48,13 +49,13 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
       
       // Update iframe src to use our proxy
       if (iframeRef.current) {
-        iframeRef.current.src = `/api/proxy?url=${encodeURIComponent(processedUrl)}`;
+        iframeRef.current.src = `/api/proxy?url=${encodeURIComponent(processedUrl)}&useBrowser=${useBrowser}`;
       }
     } catch (e) {
       setError('Invalid URL. Please check the address and try again.');
       setIsLoading(false);
     }
-  }, []);
+  }, [useBrowser]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -91,13 +92,15 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data && event.data.type === 'navigate') {
+        const newUseBrowser = typeof event.data.useBrowser === 'boolean' ? event.data.useBrowser : useBrowser;
+        setUseBrowser(newUseBrowser);
         navigateToUrl(event.data.url);
       }
     };
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [navigateToUrl]);
+  }, [navigateToUrl, useBrowser]);
 
   return (
     <div className={styles.internet}>
@@ -132,6 +135,13 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
             title="Home"
           >
             <Image src="/home.png" alt="Home" width={16} height={16} />
+          </button>
+          <button
+            className={`${styles.navButton} ${useBrowser ? styles.active : ''}`}
+            onClick={() => setUseBrowser(!useBrowser)}
+            title={useBrowser ? "Using browser rendering" : "Using direct fetch"}
+          >
+            <Image src="/ie.png" alt="Browser Mode" width={16} height={16} />
           </button>
         </div>
         <div className={styles.addressBar}>
