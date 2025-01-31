@@ -104,7 +104,7 @@ interface ProposalCandidate {
 
 export const GovernanceContent = ({ inWindow = false }: { inWindow?: boolean }) => {
   const router = useRouter();
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [collapsedItems, setCollapsedItems] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<'votes' | 'proposals'>('votes');
   const [showCandidates, setShowCandidates] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -332,7 +332,17 @@ export const GovernanceContent = ({ inWindow = false }: { inWindow?: boolean }) 
                 <div 
                   key={item.id} 
                   className={styles.feedbackItem}
-                  onClick={() => setSelectedItem(selectedItem === item.id ? null : item.id)}
+                  onClick={() => {
+                    setCollapsedItems(prev => {
+                      const newSet = new Set(prev);
+                      if (newSet.has(item.id)) {
+                        newSet.delete(item.id);
+                      } else {
+                        newSet.add(item.id);
+                      }
+                      return newSet;
+                    });
+                  }}
                 >
                   <div className={styles.feedbackHeader}>
                     <div className={styles.voterInfo}>
@@ -363,7 +373,7 @@ export const GovernanceContent = ({ inWindow = false }: { inWindow?: boolean }) 
                     </div>
                   </div>
                   
-                  {selectedItem === item.id && item.reason && (
+                  {!collapsedItems.has(item.id) && item.reason && (
                     <div className={styles.feedbackReason}>
                       <p>{item.reason || 'No reason provided'}</p>
                     </div>

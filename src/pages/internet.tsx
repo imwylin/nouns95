@@ -106,46 +106,75 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
     <div className={styles.internet}>
       <div className={styles.toolbar}>
         <div className={styles.navigationBar}>
-          <button 
-            className={styles.navButton} 
-            onClick={() => handleNavigation('back')}
-            disabled={currentIndex.current <= 0}
-            title="Back"
-          >
-            <Image src="/back.png" alt="Back" width={16} height={16} />
-          </button>
-          <button 
-            className={styles.navButton} 
-            onClick={() => handleNavigation('forward')}
-            disabled={currentIndex.current >= history.current.length - 1}
-            title="Forward"
-          >
-            <Image src="/forward.png" alt="Forward" width={16} height={16} />
-          </button>
-          <button 
-            className={styles.navButton} 
-            onClick={() => handleNavigation('refresh')}
-            title="Refresh"
-          >
-            <Image src="/refresh.png" alt="Refresh" width={16} height={16} />
-          </button>
-          <button 
-            className={styles.navButton} 
-            onClick={() => handleNavigation('home')}
-            title="Home"
-          >
-            <Image src="/home.png" alt="Home" width={16} height={16} />
-          </button>
-          <button
-            className={`${styles.navButton} ${useBrowser ? styles.active : ''}`}
-            onClick={() => setUseBrowser(!useBrowser)}
-            title={useBrowser ? "Using browser rendering" : "Using direct fetch"}
-          >
-            <Image src="/ie.png" alt="Browser Mode" width={16} height={16} />
-          </button>
+          <div className={styles.buttonGroup}>
+            <button 
+              className={styles.navButton} 
+              onClick={() => handleNavigation('back')}
+              disabled={currentIndex.current <= 0}
+              title="Back"
+            >
+              Back
+            </button>
+            <button 
+              className={styles.navButton} 
+              onClick={() => handleNavigation('forward')}
+              disabled={currentIndex.current >= history.current.length - 1}
+              title="Forward"
+            >
+              Forward
+            </button>
+            <button 
+              className={styles.navButton} 
+              onClick={() => handleNavigation('home')}
+              title="Home"
+            >
+              Home
+            </button>
+          </div>
+          <div className={styles.buttonGroup}>
+            <button 
+              className={styles.navButton} 
+              onClick={() => handleNavigation('refresh')}
+              title="Reload"
+            >
+              Reload
+            </button>
+            <button 
+              className={styles.navButton} 
+              disabled
+              title="Images"
+            >
+              Images
+            </button>
+          </div>
+          <div className={styles.buttonGroup}>
+            <button 
+              className={styles.navButton} 
+              disabled
+              title="Open"
+            >
+              Open
+            </button>
+            <button 
+              className={styles.navButton} 
+              disabled
+              title="Find"
+            >
+              Find
+            </button>
+          </div>
+          <div className={styles.buttonGroup}>
+            <button 
+              className={styles.navButton} 
+              disabled
+              title="Stop"
+            >
+              Stop
+            </button>
+          </div>
         </div>
         <div className={styles.addressBar}>
-          <span className={styles.addressLabel}>Address:</span>
+          <span className={styles.addressLabel}>Location:</span>
           <input
             type="text"
             className={styles.addressInput}
@@ -165,7 +194,7 @@ export const InternetContent: React.FC<InternetContentProps> = ({ url: initialUr
           <div className={styles.error}>
             <Image src="/error.png" alt="Error" width={32} height={32} />
             <div className={styles.errorMessage}>
-              <h3>Internet Explorer cannot display the webpage</h3>
+              <h3>Document Not Found</h3>
               <p>{error}</p>
             </div>
           </div>
