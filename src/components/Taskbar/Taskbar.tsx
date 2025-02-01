@@ -191,7 +191,17 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
                   : subItem.href === '/governance'
                     ? <GovernanceContent inWindow={isMobile} />
                     : <div>Loading {subItem.label}...</div>;
-              openWindow(subItem.href, subItem.label, content, { icon: subItem.icon });
+
+              // Calculate position for governance window
+              let options: { icon: string; position?: { x: number; y: number } } = { icon: subItem.icon };
+              if (subItem.href === '/governance') {
+                const screenWidth = window.innerWidth;
+                const windowWidth = 950;
+                const padding = 20;
+                options.position = { x: screenWidth - windowWidth - padding, y: 20 };
+              }
+
+              openWindow(subItem.href, subItem.label, content, options);
             }
           }}
         >
@@ -281,13 +291,13 @@ const Taskbar: React.FC<TaskbarProps> = ({ activeWindows, onWindowSelect, openWi
               ? '/studio.png'
               : window.id === '/' 
                 ? '/auction.png'
-                : window.id === '/governance'
-                  ? '/governance.png'
-                  : window.id === '/help'
-                    ? '/help.png'
-                    : window.id === '/internet'
-                      ? '/internetexplorer.png'
-                      : '/nouns95.png';
+              : window.id === '/governance'
+                ? '/governance.png'
+                : window.id === '/help'
+                  ? '/help.png'
+                  : window.id === '/internet'
+                    ? '/internetexplorer.png'
+                    : '/nouns95.png';
             const iconSize = window.id === '/studio' || window.id === '/internet' ? 16 : 32;
             return (
               <div

@@ -15,10 +15,11 @@
   bottom: 32px;
   overflow: hidden;
   background: transparent;
+  z-index: 0;
 }
 
 .window {
-  position: absolute;
+  position: fixed;
   min-width: 200px;
   min-height: 150px;
   background: var(--win95-gray);
@@ -32,6 +33,7 @@
   flex-direction: column;
   overflow: hidden;
   pointer-events: all;
+  z-index: 1;
 }
 
 /* Add specific minimum dimensions for auction window */

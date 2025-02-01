@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useQuery } from '@apollo/client';
 import { ENSName } from 'react-ens-name';
 import { useBlockNumber } from 'wagmi';
@@ -11,6 +12,57 @@ import { useRouter } from 'next/router';
 import { ProposalContent } from './proposal/[id]';
 import Navbar from '../components/NavBar/NavBar';
 import Footer from '../components/Footer/Footer';
+import ReactMarkdown from 'react-markdown';
+import type { Components } from 'react-markdown';
+
+// Custom component to handle paragraphs that might contain GIF links
+const CustomParagraph: Components['p'] = ({ children, ...props }) => {
+  // Convert children to array if it's not already
+  const childrenArray = React.Children.toArray(children);
+  
+  // Check if any child is a string containing a GIF link
+  const hasGifLink = childrenArray.some(child => {
+    if (typeof child === 'string') {
+      const urlMatch = child.match(/https?:\/\/\S+\.gif/i);
+      return urlMatch !== null;
+    }
+    return false;
+  });
+
+  if (hasGifLink) {
+    // Extract GIF URLs from the text
+    const text = childrenArray.join('');
+    const urls = text.match(/https?:\/\/\S+\.gif/ig) || [];
+    
+    return (
+      <>
+        {urls.map((url, index) => (
+          <div key={index} className={styles.gifContainer}>
+            <Image 
+              src={url} 
+              alt="GIF" 
+              width={300}
+              height={300}
+              className={styles.gifImage}
+              unoptimized // Important for GIFs to animate properly
+              style={{ maxWidth: '300px', height: 'auto' }}
+            />
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  return <p {...props}>{children}</p>;
+};
+
+// Helper function to convert GIF links to markdown image syntax
+const convertGifLinksToImages = (text: string) => {
+  return text.replace(
+    /(https?:\/\/\S+\.gif)/gi,
+    '![]($1)'
+  );
+};
 
 interface ProposalFeedback {
   id: string;
@@ -375,7 +427,13 @@ export const GovernanceContent = ({ inWindow = false }: { inWindow?: boolean }) 
                   
                   {!collapsedItems.has(item.id) && item.reason && (
                     <div className={styles.feedbackReason}>
-                      <p>{item.reason || 'No reason provided'}</p>
+                      <ReactMarkdown
+                        components={{
+                          p: CustomParagraph
+                        }}
+                      >
+                        {item.reason || 'No reason provided'}
+                      </ReactMarkdown>
                     </div>
                   )}
                 </div>
@@ -495,8 +553,19 @@ const GovernancePage: NextPage = () => {
     // Get the Windows95 instance from the global scope
     const windows95 = (window as any).__WINDOWS_95__;
     if (windows95?.openWindow) {
-      // Open the governance content in a window
-      windows95.openWindow('/governance', 'Governance', <GovernanceContent inWindow={true} />);
+      const windowWidth = window.innerWidth;
+      // Open the governance content in a window with position
+      windows95.openWindow(
+        '/governance', 
+        'Governance', 
+        <GovernanceContent inWindow={true} />,
+        {
+          position: {
+            x: windowWidth - 950 - 20, // Window width - governance window width - margin
+            y: 20
+          }
+        }
+      );
       setShouldRenderInWindow(true);
       // Redirect back to home to show the desktop
       router.push('/');

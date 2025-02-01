@@ -215,6 +215,32 @@
   line-height: 1.4;
 }
 
+.feedbackReason img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 8px 0;
+  border: 1px solid var(--win95-button-shadow);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+}
+
+.gifContainer {
+  margin: 8px 0;
+  max-width: 15rem;
+}
+
+.gifImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--win95-button-shadow);
+  box-shadow: 
+    inset -1px -1px 0 0 var(--win95-black),
+    inset 1px 1px 0 0 var(--win95-button-highlight);
+}
+
 .proposalsHeader {
   display: flex;
   justify-content: space-between;

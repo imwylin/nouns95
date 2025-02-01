@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import BaseWindow from './BaseWindow';
 import styles from './Windows95.module.css';
 
@@ -19,9 +19,29 @@ interface GovernanceWindowProps {
 }
 
 const GovernanceWindow: React.FC<GovernanceWindowProps> = (props) => {
+  const [defaultPosition, setDefaultPosition] = useState(props.position);
+
+  useEffect(() => {
+    if (!props.position) {
+      // Set initial position only if not already provided
+      const windowWidth = window.innerWidth;
+      setDefaultPosition({
+        x: windowWidth - 950 - 20, // Window width - governance window width - margin
+        y: 20
+      });
+      
+      // Notify parent of position change
+      props.onMove(props.id, {
+        x: windowWidth - 950 - 20,
+        y: 20
+      });
+    }
+  }, [props.id, props.onMove, props.position]);
+
   return (
     <BaseWindow
       {...props}
+      position={defaultPosition}
       icon="/governance.png"
       className={styles.governanceWindow}
       minWidth={950}

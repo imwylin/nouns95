@@ -17,6 +17,7 @@ interface Window {
 
 interface WindowOptions {
   icon?: string;
+  position?: Position;
 }
 
 interface WindowContextType {
@@ -53,13 +54,20 @@ export const WindowProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
       }
 
-      // Otherwise create a new window
+      // Calculate position based on window type or use provided position
+      let position = options.position;
+      if (!position) {
+        // Default cascading position for other windows
+        position = { x: 20 * (nextWindowId % 10), y: 20 * (nextWindowId % 10) };
+      }
+
+      // Create new window
       const newWindow: Window = {
         id: String(nextWindowId),
         path,
         title,
         content,
-        position: { x: 20 * (nextWindowId % 10), y: 20 * (nextWindowId % 10) },
+        position,
         isMinimized: false,
         ...options
       };
